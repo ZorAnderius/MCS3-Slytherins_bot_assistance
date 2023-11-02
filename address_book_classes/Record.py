@@ -4,10 +4,11 @@ from colorama import Fore
 from .Name import Name
 from .Phone import Phone
 from .Birthday import Birthday
+from .Address import Address
 
 
 class Record:
-    def __init__(self, name: str, phone: str = "", *birthday: (int, int, int)):
+    def __init__(self, name: str, phone: str = "", *birthday: (int, int, int), address: str = ''):
         self.__name = Name(name)
 
         if phone:
@@ -22,11 +23,15 @@ class Record:
         else:
             self.__birthday = None
 
+        self.__address = Address(address)
+
+
     def serialize(self):
         return {
             "name": self.name.serialize(),
             "phones": [phone.serialize() for phone in self.phones],
             "birthday": self.birthday.serialize() if self.birthday else None,
+            'address': self.address.serialize()
         }
 
     @property
@@ -58,13 +63,26 @@ class Record:
         else:
             self.__birthday = None
 
+    @property
+    def address(self) -> Address:
+        return self.__address
+
+    @address.setter
+    def set_address(self, address: str):
+        if address:
+            self.__address = Address(address)
+        else:
+            raise ValueError("Address cannot be empty")
+
     def __str__(self) -> str:
         if self.phones:
             str1 = Fore.YELLOW + "Contact name: "
             str2 = Fore.LIGHTMAGENTA_EX + str(self.name)
             str3 = Fore.YELLOW + "phones: "
             str4 = Fore.WHITE + "; ".join(phone.value for phone in self.phones)
-            return "{0}{1: <15} {2}\n".format(str1, str2, (str3 + str4))
+            str5 = Fore.YELLOW + "address: "
+            str6 = Fore.WHITE + str(self.address)
+            return "{0}{1: <15} {2}\n{3}{4: <15} {5}\n".format(str1, str2, (str3 + str4), str5, str6)
         if not self.phones and self.name.name is None:
             return "None"
         return "{0}{1: <15}: Phonebook is empty\n".format(str1, str2)
@@ -131,3 +149,15 @@ class Record:
                 raise ValueError("Invalid date format")
         else:
             raise ValueError("Invalid date format")
+
+    def add_address(self, address: str):
+        if self.__address.get_address():
+            return "Address already exists. Please use change address."
+        self.__address.set_address(address)
+        return f"Address added: {address}"
+
+    def change_address(self, address: str):
+        if not self.__address.get_address():
+            return "No existing address to change. Please use add address."
+        self.__address.set_address(address)
+        return f"Address changed to: {address}"
