@@ -8,7 +8,7 @@ class Email:
             raise ValueError("Invalid email address")
 
     def validate_email(self, email):
-        email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zAZ0-9-.]+$"
+        email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
         return re.match(email_pattern, email) is not None
 
     @staticmethod
@@ -35,6 +35,7 @@ class Contact:
     def __init__(self, email):
         self.email = email
 
+        
 if __name__ == "__main__":
     contacts = [Contact("example1@example.com"), Contact("example2@example.com")]
 
