@@ -40,6 +40,18 @@ def show_all(book):
         return Fore.YELLOW + 'Phonebook is empty'
     return general_str[:-1:]
 
+def delete_record(args, book):
+    name = args[0]
+    try:
+        contact = book.find(name)
+        if contact:
+            book.delete(name)  
+            return Fore.GREEN + 'Record deleted.'
+        else:
+            return Fore.RED + 'Contact not found.'
+    except ValueError as e:
+        return Fore.RED + str(e)
+
 def add_birthday(args, book):
     if len(args) == 4:
         name, day, month, year = args
