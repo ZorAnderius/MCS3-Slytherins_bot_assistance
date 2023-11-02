@@ -91,6 +91,23 @@ class Record:
             index = list(map(str, self.phones)).index(phone)
             del self.phones[index]
             return index
+        
+    def delete_record(self, phone: str) -> str:
+            index = self.find_phone(phone)
+
+            if index is not None:
+                del self.phones[index]
+                
+                # Check if there are no more phone numbers for this record
+                if not self.phones:
+                    # If there are no more phone numbers, also remove the name and birthday
+                    self.__name = Name("")  
+                    self.__birthday = None  
+
+                return f"Record for {self.name} with phone {phone} deleted."
+
+            return f"No record found for phone {phone}."
+       
 
     def edit_phone(self, old_phone: str, new_phone: str):
         new_phone = Phone(new_phone)

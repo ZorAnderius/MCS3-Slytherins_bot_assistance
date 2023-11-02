@@ -34,6 +34,8 @@ def main():
                 print(find_phone(args, book)[:-1:])
             elif command == "all-contacts":
                 print(show_all(book))
+            elif command == 'delete-record':
+                print (delete_record(args, book))
             elif command == "add-birthday":
                 print(add_birthday(args, book))
             elif command == "show-birthday":
