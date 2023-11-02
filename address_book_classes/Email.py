@@ -8,7 +8,7 @@ class Email:
             raise ValueError("Invalid email address")
 
     def validate_email(self, email):
-        email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zAZ0-9-.]+$"
         return re.match(email_pattern, email) is not None
 
     @staticmethod
@@ -35,20 +35,21 @@ class Contact:
     def __init__(self, email):
         self.email = email
 
-contacts = [Contact("example1@example.com"), Contact("example2@example.com")]
+if __name__ == "__main__":
+    contacts = [Contact("example1@example.com"), Contact("example2@example.com")]
 
-search_results = Email.search_contacts(contacts, 'exa')
-print("Search Results:", search_results)
+    search_results = Email.search_contacts(contacts, 'exa')
+    print("Search Results:", search_results)
 
-suggested_emails = Email.suggest_variants(contacts, 'exa')
-print("Suggested Emails:", suggested_emails)
+    suggested_emails = Email.suggest_variants(contacts, 'exa')
+    print("Suggested Emails:", suggested_emails)
 
-Email.edit_email(contacts, 'example1@example.com', 'new@example.com')
-print("Updated Contacts:")
-for contact in contacts:
-    print(contact.email)
+    Email.edit_email(contacts, 'example1@example.com', 'new@example.com')
+    print("Updated Contacts:")
+    for contact in contacts:
+        print(contact.email)
 
-Email.delete_email(contacts, 'new@example.com')
-print("Contacts After Deletion:")
-for contact in contacts:
-    print(contact.email)
+    Email.delete_email(contacts, 'new@example.com')
+    print("Contacts After Deletion:")
+    for contact in contacts:
+        print(contact.email)
