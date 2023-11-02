@@ -35,20 +35,22 @@ class Contact:
     def __init__(self, email):
         self.email = email
 
-contacts = [Contact("example1@example.com"), Contact("example2@example.com")]
+        
+if __name__ == "__main__":
+    contacts = [Contact("example1@example.com"), Contact("example2@example.com")]
 
-search_results = Email.search_contacts(contacts, 'exa')
-print("Search Results:", search_results)
+    search_results = Email.search_contacts(contacts, 'exa')
+    print("Search Results:", search_results)
 
-suggested_emails = Email.suggest_variants(contacts, 'exa')
-print("Suggested Emails:", suggested_emails)
+    suggested_emails = Email.suggest_variants(contacts, 'exa')
+    print("Suggested Emails:", suggested_emails)
 
-Email.edit_email(contacts, 'example1@example.com', 'new@example.com')
-print("Updated Contacts:")
-for contact in contacts:
-    print(contact.email)
+    Email.edit_email(contacts, 'example1@example.com', 'new@example.com')
+    print("Updated Contacts:")
+    for contact in contacts:
+        print(contact.email)
 
-Email.delete_email(contacts, 'new@example.com')
-print("Contacts After Deletion:")
-for contact in contacts:
-    print(contact.email)
+    Email.delete_email(contacts, 'new@example.com')
+    print("Contacts After Deletion:")
+    for contact in contacts:
+        print(contact.email)
