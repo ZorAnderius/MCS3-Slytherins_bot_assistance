@@ -62,6 +62,35 @@ class AddressBook(UserDict):
         if name in self.data:
             del self.data[name]
 
+    def search_contacts_by_name(self, name_prefix):
+        if len(name_prefix) < 2:
+            return "At least two characters are required for search"
+
+        matching_contacts = {}
+        for key, record in self.data.items():
+            if record.name.value.lower().startswith(name_prefix.lower()):
+                matching_contacts[key] = record
+
+        if matching_contacts:
+            return matching_contacts
+        else:
+            return "No contact found with this name"
+
+    def search_contacts_by_phone(self, phone_prefix):
+        if len(phone_prefix) < 2:
+            return "At least two characters are required for search"
+
+        matching_contacts = {}
+        for key, record in self.data.items():
+            for phone in record.phones:
+                if phone.value.startswith(phone_prefix):
+                    matching_contacts[key] = record
+
+        if matching_contacts:
+            return matching_contacts
+        else:
+            return "No contacts found with this phone number"
+
     def serialize(self):
         if len(self.data):
             nested_dict = dict()
