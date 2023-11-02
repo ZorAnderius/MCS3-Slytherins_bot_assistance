@@ -24,7 +24,7 @@ class NoteBook(UserDict):
 
     def add_note(self, note):
         if note:
-            if not note.created_at in self.data:
+            if not note.id in self.data:
                 self.data[note.id] = note
             else:
                 return "Note is already done"

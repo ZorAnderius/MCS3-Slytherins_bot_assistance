@@ -91,6 +91,11 @@ def add_note(args, book):
     try:
         title = args[0]
         note = Note(title)
+        note.input_body()
+        while True:
+            add_tag = note.input_tag()
+            if not add_tag:
+                break
         book.add_note(note)
     except ValueError as e:
         return Fore.RED + str(e)

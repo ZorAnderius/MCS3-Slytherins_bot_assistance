@@ -20,7 +20,7 @@ class Title:
 
     def __str__(self):
         if self.__title == None:
-            return "Add title"
+            return "Title is empty"
         return f"{self.__title}"
 
     def __is_valid(self, title):

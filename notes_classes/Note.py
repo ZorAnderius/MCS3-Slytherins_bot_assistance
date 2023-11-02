@@ -86,6 +86,22 @@ class Note:
         elif new_tag.tag:
             self.__tags.append(new_tag)
 
+    def input_body(self):
+        body_text = self.__input_note("Enter body")
+        if body_text:
+            self.__body = body_text
+
+    def input_tag(self):
+        tag_text = self.__input_note("Enter tag (n-close)")
+        if tag_text != "n":
+            self.add_tag(tag_text)
+            return True
+        else:
+            return False
+
+    def change_title(self, title: str):
+        self.add_title(title)
+
     def __str__(self):
         tags_str = None
         if self.tags and type(self.tags) is list:
@@ -107,7 +123,11 @@ class Note:
         if tags_str is None:
             return f"Title: {self.__title}\nNote: {self.__body}\nCreated: {self.__created_at}\n"
 
-        return f"Title: {self.__title}\nTags: {tags_str}\nNote: {body}\nCreated: {self.__created_at}\n"
+        return f"Title: {self.__title}\nTags: {tags_str}\nNote: {self.__body}\nCreated: {self.__created_at}\n"
+
+    def __input_note(self, txt_message):
+        input_txt = input(f"{txt_message} :")
+        return input_txt
 
 
 if __name__ == "__main__":
