@@ -7,15 +7,15 @@ from .Birthday import Birthday
 
 
 class Record:
-    def __init__(self, name: str, phone: str = '', *birthday: (int, int, int)):
+    def __init__(self, name: str, phone: str = "", *birthday: (int, int, int)):
         self.__name = Name(name)
-        
+
         if phone:
             phone = Phone(phone)
             self.__phones = [phone]
         else:
             self.__phones = []
-            
+
         if birthday and len(birthday) == 3:
             year, month, day = birthday
             self.__birthday = Birthday(year, month, day)
@@ -24,9 +24,9 @@ class Record:
 
     def serialize(self):
         return {
-            'name': self.name.serialize(),
-            'phones': [phone.serialize() for phone in self.phones],
-            'birthday': self.birthday.serialize() if self.birthday else None
+            "name": self.name.serialize(),
+            "phones": [phone.serialize() for phone in self.phones],
+            "birthday": self.birthday.serialize() if self.birthday else None,
         }
 
     @property
@@ -37,7 +37,7 @@ class Record:
     def set_name(self, name: str):
         self.__name = Name(name)
 
-    @property  
+    @property
     def phones(self) -> list[Phone]:
         return self.__phones
 
@@ -59,16 +59,15 @@ class Record:
             self.__birthday = None
 
     def __str__(self) -> str:
-        if self.phones:  
+        if self.phones:
             str1 = Fore.YELLOW + "Contact name: "
             str2 = Fore.LIGHTMAGENTA_EX + str(self.name)
             str3 = Fore.YELLOW + "phones: "
-            str4 = Fore.WHITE + '; '.join(phone.value for phone in self.phones)
-            return "{0}{1: <15} {2}\n".format(str1,  str2, (str3 + str4))
-        if not self.phones and self.name.name is None:   
-            return 'None'
-        return "{0}{1: <15}: Phonebook is empty\n".format(str1,  str2)
-
+            str4 = Fore.WHITE + "; ".join(phone.value for phone in self.phones)
+            return "{0}{1: <15} {2}\n".format(str1, str2, (str3 + str4))
+        if not self.phones and self.name.name is None:
+            return "None"
+        return "{0}{1: <15}: Phonebook is empty\n".format(str1, str2)
 
     def add_phones(self, phones):
         self.__phones = [Phone(phone) for phone in phones]
@@ -76,10 +75,12 @@ class Record:
     def add_phone(self, phone: str):
         new_phone = Phone(phone)
         if new_phone.phone in self.phones:
-            raise ValueError(Fore.YELLOW + f"Phone {phone} is already in your phonebook. If you want to change phone use 'change' operation")
+            raise ValueError(
+                Fore.YELLOW
+                + f"Phone {phone} is already in your phonebook. If you want to change phone use 'change' operation"
+            )
         elif new_phone.phone:
             self.__phones.append(new_phone)
-            
 
     def find_phone(self, phone: str) -> str or None:
         if list(filter(lambda p: p.value == phone, self.phones)):
@@ -116,7 +117,9 @@ class Record:
                 if index >= 0:
                     self.phones.insert(index, new_phone)
             else:
-                raise ValueError(f"Phone number {old_phone} is not in the {self.name} record list")
+                raise ValueError(
+                    f"Phone number {old_phone} is not in the {self.name} record list"
+                )
 
     def add_birthday(self, *birthday: (int, int, int)):
         if birthday and len(birthday) == 3:
@@ -125,6 +128,6 @@ class Record:
                 raise ValueError("You cannot change existing birthday")
             self.__birthday = Birthday(year, month, day)
             if self.__birthday is None:
-                raise ValueError('Invalid date format')
-        else: 
-            raise ValueError('Invalid date format')
+                raise ValueError("Invalid date format")
+        else:
+            raise ValueError("Invalid date format")
