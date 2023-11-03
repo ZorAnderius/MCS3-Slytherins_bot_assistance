@@ -40,11 +40,14 @@ def find_phone(args, book):
 
 def show_all(book):
     general_str = ""
-    for _, value in book.items():
-        general_str += str(value)
+    for key, value in book.items():
+        if type(value) == list:
+            general_str += f"Author: {key}\n" + "".join([str(note) for note in value])
+        else:
+            general_str += str(value)
     if general_str == "":
         return Fore.YELLOW + "Book is empty"
-    return general_str[:-1:]
+    return general_str
 
 
 def add_birthday(args, book):
@@ -89,13 +92,11 @@ def show_all_birthdays(args, book):
 
 def add_note(args, book):
     try:
-        title = args[0]
-        note = Note(title)
+        author = args[0]
+        note = Note(author)
+        note.input_title()
         note.input_body()
-        while True:
-            add_tag = note.input_tag()
-            if not add_tag:
-                break
+        note.input_tag()
         book.add_note(note)
     except ValueError as e:
         return Fore.RED + str(e)

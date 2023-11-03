@@ -1,15 +1,20 @@
 from datetime import datetime
 from colorama import Fore
 import uuid
+import sys
+
+sys.path.append(".")
+
 
 from .Title import Title
 from .Body import Body
 from .Tag import Tag
+from address_book_classes.Name import Name
 
 
 class Note:
-    def __init__(self, name, title="", body="", *tags):
-        self.__name = name
+    def __init__(self, author, title="", body="", *tags):
+        self.__author = Name(author)
         new_title = Title(title)
         if new_title.title and type(new_title.title) is str:
             self.__title = new_title
@@ -25,8 +30,11 @@ class Note:
             self.__tags = [Tag(tag) for tag in tags]
         else:
             self.__tags = []
-        self.__id = uuid.uuid1()
         self.__created_at = datetime.today().strftime("%a %d %b %Y, %I:%M%p")
+
+    @property
+    def author(self):
+        return self.__author
 
     @property
     def title(self):
@@ -80,24 +88,32 @@ class Note:
             self.__body = None
 
     def add_tag(self, tag: str):
-        new_tag = Tag(tag)
-        if new_tag.tag in self.__tags:
+        try:
+            new_tag = Tag(tag)
+        except ValueError as e:
+            print(Fore.RED + str(e))
+            new_tag = None
+        if new_tag and new_tag.tag in self.__tags:
             raise ValueError(Fore.YELLOW + f"Duplicate tag {new_tag}")
-        elif new_tag.tag:
+        elif new_tag:
             self.__tags.append(new_tag)
 
+    def input_title(self):
+        title_text = self.__input_note(Fore.BLUE + "Enter title")
+        if title_text:
+            self.__title = title_text
+
     def input_body(self):
-        body_text = self.__input_note("Enter body")
+        body_text = self.__input_note(Fore.BLUE + "Enter body")
         if body_text:
             self.__body = body_text
 
     def input_tag(self):
-        tag_text = self.__input_note("Enter tag (n-close)")
-        if tag_text != "n":
+        while True:
+            tag_text = self.__input_note(Fore.BLUE + "Enter tag (n-close)")
+            if tag_text == "n":
+                break
             self.add_tag(tag_text)
-            return True
-        else:
-            return False
 
     def change_title(self, title: str):
         self.add_title(title)
@@ -117,7 +133,7 @@ class Note:
                 f"Title: Add title\nNote: {self.__body}\nCreated: {self.__created_at}\n"
             )
         if self.__title is None:
-            return f"Title: Add title\nTags: {tags_str}\nNote: {body}\nCreated: {self.__created_at}\n"
+            return f"Title: Add title\nTags: {tags_str}\nNote: {self.__body}\nCreated: {self.__created_at}\n"
         if not self.__body:
             return f"Title: {self.__title}\nTags: {tags_str}\nNote: Add note\nCreated: {self.__created_at}\n"
         if tags_str is None:

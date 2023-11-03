@@ -24,10 +24,12 @@ class NoteBook(UserDict):
 
     def add_note(self, note):
         if note:
-            if not note.id in self.data:
-                self.data[note.id] = note
+            if note.author.value in self.data:
+                self.data[note.author.value].append(note)
             else:
-                return "Note is already done"
+                self.data[note.author.value] = [note]
+        else:
+            raise ValueError("Invalid record")
 
     def __repr__(self):
         string = ""
