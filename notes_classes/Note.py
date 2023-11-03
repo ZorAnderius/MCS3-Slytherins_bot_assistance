@@ -1,7 +1,7 @@
 from datetime import datetime
 from colorama import Fore, Back
-import uuid
 import sys
+import copy
 
 sys.path.append(".")
 
@@ -26,8 +26,10 @@ class Note:
             self.__body = new_body
         else:
             self.__body = None
-        if tags:
+        if tags and type(tags[0]) == str:
             self.__tags = [Tag(tag) for tag in tags]
+        elif tags and type(tags[0]) == Tag:
+            self.__tags = tags
         else:
             self.__tags = []
         self.__created_at = datetime.today().strftime("%a %d %b %Y, %I:%M%p")
@@ -77,13 +79,15 @@ class Note:
 
     def add_title(self, title: str):
         new_title = Title(title)
-        if new_title and type(new_title) is Title:
+        if new_title and type(new_title) == Title:
             self.__title = new_title
 
     def add_body(self, body: str):
         new_body = Body(body)
         if new_body.body and type(new_body.body) is str:
             self.__body = new_body
+        elif self.__body is not None:
+            pass
         else:
             self.__body = None
 
@@ -101,12 +105,12 @@ class Note:
     def input_title(self):
         title_text = self.__input_note(Fore.BLUE + "Enter title")
         if title_text:
-            self.__title = title_text.strip().capitalize()
+            self.__title = title_text.strip().lower()
 
     def input_body(self):
         body_text = self.__input_note(Fore.BLUE + "Enter body")
         if body_text:
-            self.__body = body_text.strip().capitalize()
+            self.__body = body_text.strip()
 
     def input_tag(self):
         while True:
@@ -118,11 +122,49 @@ class Note:
     def edit_title(self, title: str):
         self.add_title(title)
 
-    def edit_body(self, title, body):
-        self.add_title(title)
+    def edit_body(self, body):
+        self.add_body(body)
 
-    def edit_tag(self, title, old_tag, new_tag):
-        pass
+    def edit_tag(self, old_tag: str, new_tag: str):
+        new_tag = Tag(new_tag)
+        if new_tag.tag:
+            if self.find_tag(old_tag):
+                index = self.remove_tag(old_tag)
+                if index >= 0:
+                    self.tags.insert(index, new_tag)
+            else:
+                raise ValueError(
+                    f"Tag {old_tag} is not in the {self.title.upper()} note"
+                )
+
+    def find_tag(self, tag: str) -> str or None:
+        if list(filter(lambda p: p.tag == tag, self.tags)):
+            return tag
+
+    def remove_tag(self, tag: str) -> int or None:
+        if self.find_tag(tag):
+            index = list(map(str, self.tags)).index(tag)
+            del self.tags[index]
+            return index
+
+    def __copy__(self):
+        note_copy = Note(
+            copy.copy(self.author),
+            copy.copy(self.title),
+            copy.copy(self.body),
+            [copy.copy(tag) for tag in self.tags],
+        )
+        return note_copy
+
+    def __deepcopy__(self, memo):
+        copy_obj = Note(
+            copy.deepcopy(self.author),
+            copy.deepcopy(self.title),
+            copy.deepcopy(self.body),
+            copy.deepcopy(self.tags),
+        )
+        memo[id(copy_obj)] = copy_obj
+        return copy_obj
 
     def __str__(self):
         tags_str = None
@@ -142,20 +184,20 @@ class Note:
         if self.__title is None and tags_str is None and self.__body is None:
             pass
         elif tags_str is None and not self.__body:
-            title_body = Fore.WHITE + f"{self.__title}\n"
+            title_body = Fore.WHITE + f"{self.__title}\n".capitalize()
         elif self.__title is None and not self.__body:
             tag_body = Fore.WHITE + f"{tags_str}\n"
         elif self.__title is None and tags_str is None:
-            note_body = Fore.WHITE + f"{self.__body}\n"
+            note_body = Fore.WHITE + f"{self.__body}\n".capitalize()
         elif self.__title is None:
             tag_body = Fore.WHITE + f"{tags_str}\n"
-            note_body = Fore.WHITE + f"{self.__body}\n"
+            note_body = Fore.WHITE + f"{self.__body}\n".capitalize()
         elif not self.__body:
-            title_body = Fore.WHITE + f"{self.__title}\n"
+            title_body = Fore.WHITE + f"{self.__title}\n".capitalize()
             tag_body = Fore.WHITE + f"{tags_str}\n"
         else:
-            title_body = Fore.WHITE + f"{self.__title}\n"
-            note_body = Fore.WHITE + f"{self.__body}\n"
+            title_body = Fore.WHITE + f"{self.__title}\n".capitalize()
+            note_body = Fore.WHITE + f"{self.__body}\n".capitalize()
             tag_body = Fore.WHITE + f"{tags_str}\n"
         if tags_str is None:
             return "{:<18}{:<5}{:<17}{:<2}{:<17}{:<2}\n".format(
@@ -178,7 +220,7 @@ class Note:
         )
 
     def __input_note(self, txt_message):
-        input_txt = input(f"{txt_message} :")
+        input_txt = input(f"{txt_message} : ")
         return input_txt
 
 
