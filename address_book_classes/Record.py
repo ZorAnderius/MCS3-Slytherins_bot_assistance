@@ -25,11 +25,8 @@ class Record:
 
         self.__address = Address(address)
 
-        if email:
-            email = Email(email)
-            self.__emails = [email]
-        else:
-            self.__emails = []
+        self.__emails = Email(email)
+
 
     def serialize(self):
         return {
@@ -77,27 +74,22 @@ class Record:
         self.__address = Address(address)
 
     @property
-    def emails(self) -> list[Email]:
+    def emails(self) -> Email:
         return self.__emails
 
-    def set_emails(self, emails: list[Email]):
-        if emails:
-            self.__emails = emails
-        else:
-            self.__emails = []
-            
+    def set_emails(self, emails: str):
+        self.__emails = Email(emails)
+
     def __str__(self) -> str:
-        if self.phones:
+        if self.phones:  
             str1 = Fore.YELLOW + "Contact name: "
             str2 = Fore.LIGHTMAGENTA_EX + str(self.name)
             str3 = Fore.YELLOW + "phones: "
-            str4 = Fore.WHITE + "; ".join(phone.value for phone in self.phones)
-            str5 = Fore.YELLOW + "address: "
-            str6 = Fore.WHITE + str(self.address)
-            return "{0}{1: <15} {2}\n{3}{4: <15} {5}\n".format(str1, str2, (str3 + str4), str5, str6)
-        if not self.phones and self.name.name is None:
-            return "None"
-        return "{0}{1: <15}: Phonebook is empty\n".format(str1, str2)
+            str4 = Fore.WHITE + '; '.join(phone.value for phone in self.phones)
+            return "{0}{1: <15} {2}\n".format(str1,  str2, (str3 + str4))
+        if not self.phones and self.name.name is None:   
+            return 'None'
+        return "{0}{1: <15}: Phonebook is empty\n".format(str1,  str2)
 
     def search_contacts(self, keyword: str):
         keyword = keyword.lower()
