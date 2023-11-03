@@ -5,10 +5,10 @@ from .Name import Name
 from .Phone import Phone
 from .Birthday import Birthday
 from .Address import Address
-
+from .Email import Email
 
 class Record:
-    def __init__(self, name: str, phone: str = "", *birthday: (int, int, int), address: str = ''):
+    def __init__(self, name: str, phone: str = "", *birthday: (int, int, int), address: str = '', email: str = ''):
         self.__name = Name(name)
 
         if phone:
@@ -25,6 +25,11 @@ class Record:
 
         self.__address = Address(address)
 
+        if email:
+            email = Email(email)
+            self.__emails = [email]
+        else:
+            self.__emails = []
 
     def serialize(self):
         return {
@@ -71,6 +76,16 @@ class Record:
     def set_address(self, address: str):
         self.__address = Address(address)
 
+    @property
+    def emails(self) -> list[Email]:
+        return self.__emails
+
+    def set_emails(self, emails: list[Email]):
+        if emails:
+            self.__emails = emails
+        else:
+            self.__emails = []
+            
     def __str__(self) -> str:
         if self.phones:
             str1 = Fore.YELLOW + "Contact name: "
@@ -83,6 +98,40 @@ class Record:
         if not self.phones and self.name.name is None:
             return "None"
         return "{0}{1: <15}: Phonebook is empty\n".format(str1, str2)
+
+    def search_contacts(self, keyword: str):
+        keyword = keyword.lower()
+        results = []
+
+        for contact in self.contacts:
+            contact_name = contact.name.name.lower()
+            for phone in contact.phones:
+                phone_number = phone.value.lower()
+            for email in contact.emails:
+                email_address = email.address.lower()
+            birthday_date = str(contact.birthday.birthday) if contact.birthday else ""
+
+            if (self.check_prefix(contact_name, keyword) or
+                self.check_prefix(phone_number, keyword) or
+                self.check_prefix(email_address, keyword) or
+                self.check_prefix(birthday_date, keyword)):
+                results.append(contact)
+
+        return results
+    
+    def check_prefix(self, text, prefix):
+        if len(prefix) >= 2 and text.startswith(prefix):
+            return True
+        return False
+    
+    def search(self, keyword: str):
+        search_results = self.search_contacts(keyword)
+        if search_results:
+            print(f"Search results for '{keyword}':")
+            for result in search_results:
+                print(result)
+        else:
+            print(f"No results found for '{keyword}'.")
 
     def add_phones(self, phones):
         self.__phones = [Phone(phone) for phone in phones]
@@ -158,3 +207,17 @@ class Record:
             return "No existing address to change. Please use add address."
         self.__address.set_address(address)
         return f"Address changed to: {address}"
+    
+    def print_contact(self):
+        if self.name.name:
+            print(Fore.YELLOW + "Contact name: " + Fore.LIGHTMAGENTA_EX + self.name.name)
+        if self.phones:
+            print(Fore.YELLOW + "Phones:")
+            for phone in self.phones:
+                print(Fore.WHITE + phone.value)
+        if self.birthday:
+            print(Fore.YELLOW + "Birthday: " + Fore.WHITE + str(self.birthday.birthday))
+        if self.emails:
+            print(Fore.YELLOW + "Emails:")
+            for email in self.emails:
+                print(Fore.WHITE + email.address)
