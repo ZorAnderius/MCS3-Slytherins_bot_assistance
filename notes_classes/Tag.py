@@ -43,6 +43,6 @@ class Tag:
             )
         return (
             True
-            if tag and type(tag) is str and len(tag) > 2 and tag.isalpha()
+            if tag and type(tag) is str and len(tag) >= 2 and tag.isalpha()
             else False
         )

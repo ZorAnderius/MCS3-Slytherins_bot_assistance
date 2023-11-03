@@ -126,11 +126,27 @@ def add_note(args, book):
     return Fore.GREEN + "Note added."
 
 
+def add_tag(args, book):
+    if len(args) == 3:
+        author, title, tag = args
+        try:
+            note = book.find_note(author, title)
+            if tag and type(tag) is str:
+                for note_tag in note.tags:
+                    pass
+                note.add_tag(tag)
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return Fore.RED + "Invalid format. Must be 3 arguments: name, title, new_tag"
+    return Fore.GREEN + "Tag updated."
+
+
 def change_note_title(args, book):
     if len(args) == 2:
-        name, old_title = args
+        author, old_title = args
         try:
-            note = book.find_note(name, old_title)
+            note = book.find_note(author, old_title)
             new_title = ""
             while True:
                 new_title = input(Fore.BLUE + "Enter new title (n-close): ")
@@ -152,16 +168,16 @@ def change_note_title(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. Missing one of the parameters: name, old_title or new_title"
+            + "Invalid format. Missing one of the arguments: name, old_title or new_title"
         )
-    return Fore.GREEN + "Contact changed."
+    return Fore.GREEN + "Title changed."
 
 
 def change_note_body(args, book):
     if len(args) == 2:
-        name, title = args
+        author, title = args
         try:
-            note = book.find_note(name, title)
+            note = book.find_note(author, title)
             while True:
                 body = input(Fore.BLUE + "Enter note (n-close): ")
                 if body == "n":
@@ -180,9 +196,9 @@ def change_note_body(args, book):
 
 def change_note_tag(args, book):
     if len(args) == 3:
-        name, title, old_tag = args
+        author, title, old_tag = args
         try:
-            note = book.find_note(name, title)
+            note = book.find_note(author, title)
             while True:
                 new_tag = input(Fore.BLUE + "Enter new tag (n-close): ")
                 if new_tag == "n":
@@ -200,7 +216,7 @@ def change_note_tag(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. To change tag use next command - [change-note-tag name title old_tag]"
+            + "Invalid format. To change tag use next command - [change-tag name title old_tag]"
         )
     return Fore.GREEN + "Tag changed."
 
@@ -219,16 +235,25 @@ def remove_note(args, book):
 
 def remove_note_body(args, book):
     if len(args) == 2:
-        name, title = args
+        author, title = args
         try:
-            note = book.find_note(name, title)
-            note.remove(title)
+            note = book.find_note(author, title)
+            note.remove_body()
         except ValueError as e:
             return Fore.RED + str(e)
     else:
         return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
-    return Fore.GREEN + "Note deleted."
+    return Fore.GREEN + "Note body deleted."
 
 
 def remove_note_tag(args, book):
-    pass
+    if len(args) == 3:
+        author, title, tag = args
+        try:
+            note = book.find_note(author, title)
+            note.remove_tag(tag)
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+    return Fore.GREEN + "Note body deleted."

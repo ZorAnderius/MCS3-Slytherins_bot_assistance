@@ -42,14 +42,15 @@ class NoteBook(UserDict):
 
     def find_note(self, name, title):
         notes = self.find_all_notes(name)
-        print(notes)
-        # return list(filter(lambda note: note.title.lower() == title.lower(), notes))[0]
+        return list(filter(lambda note: note.title.lower() == title.lower(), notes))[0]
 
     def remove_note(self, author, title):
         if author in self.data:
             notes = self.find_all_notes(author)
-            index = self.find_note(author, title)
-            print(notes)
+            note = self.find_note(author, title)
+            index = notes.index(note)
+            if index:
+                notes.pop(index)
 
     def delete(self, name):
         if name in self.data:

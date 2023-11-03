@@ -92,6 +92,9 @@ class Note:
             self.__body = None
 
     def add_tag(self, tag: str):
+        if list(filter(lambda x: x.tag == tag, self.__tags)):
+            raise ValueError(Fore.YELLOW + f"{tag} is already exist")
+
         try:
             new_tag = Tag(tag)
         except ValueError as e:
@@ -117,6 +120,9 @@ class Note:
             tag_text = self.__input_note(Fore.BLUE + "Enter tag (n-close)")
             if tag_text == "n":
                 break
+            if list(filter(lambda x: x.tag == tag_text, self.__tags)):
+                print(Fore.YELLOW + f"{tag_text} is already exist")
+                continue
             self.add_tag(tag_text)
 
     def edit_title(self, title: str):
@@ -126,6 +132,8 @@ class Note:
         self.add_body(body)
 
     def edit_tag(self, old_tag: str, new_tag: str):
+        if list(filter(lambda x: x.tag == new_tag, self.__tags)):
+            raise ValueError(Fore.YELLOW + f"{new_tag} is already exist")
         new_tag = Tag(new_tag)
         if new_tag.tag:
             if self.find_tag(old_tag):
@@ -140,6 +148,9 @@ class Note:
     def find_tag(self, tag: str) -> str or None:
         if list(filter(lambda p: p.tag == tag, self.tags)):
             return tag
+
+    def remove_body(self):
+        self.__body = None
 
     def remove_tag(self, tag: str) -> int or None:
         if self.find_tag(tag):

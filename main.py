@@ -42,6 +42,8 @@ def main():
                 print(show_all_birthdays(args, book))
             elif command == "add-note":
                 print(add_note(args, notebook))
+            elif command == "add-tag":
+                print(add_tag(args, notebook))
             elif command == "change-title":
                 print(change_note_title(args, notebook))
             elif command == "change-body":
