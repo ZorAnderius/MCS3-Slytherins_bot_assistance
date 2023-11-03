@@ -69,10 +69,7 @@ class Record:
 
     @address.setter
     def set_address(self, address: str):
-        if address:
-            self.__address = Address(address)
-        else:
-            raise ValueError("Address cannot be empty")
+        self.__address = Address(address)
 
     def __str__(self) -> str:
         if self.phones:

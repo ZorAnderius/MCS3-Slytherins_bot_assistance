@@ -1,12 +1,11 @@
 class Address:
-    def __init__(self, text):
+    def __init__(self, text=""):
         self.set_address(text)
 
     def set_address(self, text):
-        if not text:
-            raise ValueError("Address cannot be empty.")
-        if not any(char.isalpha() for char in text):
-            raise ValueError("Address must contain at least one alphabet character.")
+        if text is not None:
+            if not any(char.isalpha() for char in text):
+                raise ValueError("Address must contain at least one alphabet character.")
         self.text = text
 
     def get_address(self):
