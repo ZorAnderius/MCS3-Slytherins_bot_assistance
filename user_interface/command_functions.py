@@ -1,4 +1,5 @@
 from colorama import Fore
+import copy
 
 from address_book_classes.Record import Record
 from notes_classes.Note import Note
@@ -40,8 +41,16 @@ def find_phone(args, book):
 
 def show_all(book):
     general_str = ""
-    for _, value in book.items():
-        general_str += str(value)
+    for key, value in book.items():
+        if type(value) == list:
+            author_title = Fore.CYAN + f"\nAuthor:"
+            author_name = Fore.YELLOW + f"{key}"
+            author_notes = "".join([str(note) for note in value])
+            general_str += "{:}{:>10}{:^100}".format(
+                author_title, author_name, author_notes
+            )
+        else:
+            general_str += str(value)
     if general_str == "":
         return Fore.YELLOW + "Book is empty"
     return general_str[:-1:]
@@ -98,15 +107,164 @@ def show_all_birthdays(args, book):
     return birth_str[:-1:]
 
 
+def find_notes(args, book):
+    try:
+        name = args[0]
+        return book.find(name)
+    except ValueError as e:
+        return Fore.RED + str(e)
+
+
+def find_note(args, book):
+    try:
+        name, title = args[0]
+        return book.find(name, title)
+    except ValueError as e:
+        return Fore.RED + str(e)
+
+
 def add_note(args, book):
     try:
-        title = args[0]
-        note = Note(title)
+        author = args[0]
+        note = Note(author)
+        note.input_title()
+        book.check_title(note)
+        note.input_body()
+        note.input_tag()
         book.add_note(note)
     except ValueError as e:
         return Fore.RED + str(e)
     return Fore.GREEN + "Note added."
 
 
-def notes_input(txt_name):
-    return input(txt_name)
+def add_tag(args, book):
+    if len(args) == 3:
+        author, title, tag = args
+        try:
+            note = book.find_note(author, title)
+            if tag and type(tag) is str:
+                for note_tag in note.tags:
+                    pass
+                note.add_tag(tag)
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return Fore.RED + "Invalid format. Must be 3 arguments: name, title, new_tag"
+    return Fore.GREEN + "Tag updated."
+
+
+def change_note_title(args, book):
+    if len(args) == 2:
+        author, old_title = args
+        try:
+            note = book.find_note(author, old_title)
+            new_title = ""
+            while True:
+                new_title = input(Fore.BLUE + "Enter new title (n-close): ")
+                if new_title == "n":
+                    return Fore.YELLOW + "No changes saved."
+                if new_title and type(new_title) is str:
+                    break
+                else:
+                    print(Fore.RED + "Invalid text")
+            copy_note = copy.deepcopy(note)
+            if new_title and type(new_title) is str:
+                copy_note.edit_title(new_title)
+                book.check_title(copy_note)
+                note.edit_title(new_title)
+            else:
+                return Fore.YELLOW + "No changes saved."
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return (
+            Fore.RED
+            + "Invalid format. Missing one of the arguments: name, old_title or new_title"
+        )
+    return Fore.GREEN + "Title changed."
+
+
+def change_note_body(args, book):
+    if len(args) == 2:
+        author, title = args
+        try:
+            note = book.find_note(author, title)
+            while True:
+                body = input(Fore.BLUE + "Enter note (n-close): ")
+                if body == "n":
+                    return Fore.YELLOW + "No changes saved."
+                if body and type(body) is str:
+                    note.edit_body(body)
+                    break
+                else:
+                    print(Fore.RED + "Invalid text")
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+    return Fore.GREEN + "Note changed."
+
+
+def change_note_tag(args, book):
+    if len(args) == 3:
+        author, title, old_tag = args
+        try:
+            note = book.find_note(author, title)
+            while True:
+                new_tag = input(Fore.BLUE + "Enter new tag (n-close): ")
+                if new_tag == "n":
+                    return Fore.YELLOW + "No changes saved."
+                if new_tag and type(new_tag) == str:
+                    try:
+                        note.edit_tag(old_tag, new_tag)
+                        break
+                    except ValueError as e:
+                        print(Fore.RED + f"{e}")
+                else:
+                    print(Fore.RED + "Invalid text")
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return (
+            Fore.RED
+            + "Invalid format. To change tag use next command - [change-tag name title old_tag]"
+        )
+    return Fore.GREEN + "Tag changed."
+
+
+def remove_note(args, book):
+    if len(args) == 2:
+        author, title = args
+        try:
+            book.remove_note(author, title)
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+    return Fore.GREEN + "Note deleted."
+
+
+def remove_note_body(args, book):
+    if len(args) == 2:
+        author, title = args
+        try:
+            note = book.find_note(author, title)
+            note.remove_body()
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+    return Fore.GREEN + "Note body deleted."
+
+
+def remove_note_tag(args, book):
+    if len(args) == 3:
+        author, title, tag = args
+        try:
+            note = book.find_note(author, title)
+            note.remove_tag(tag)
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+    return Fore.GREEN + "Note body deleted."

@@ -1,3 +1,6 @@
+import copy
+
+
 class Title:
     def __init__(self, title=""):
         if self.__is_valid(title):
@@ -18,10 +21,16 @@ class Title:
     def set_title(self, title=""):
         self.__title = title
 
+    def __copy__(self):
+        title_copy = Title(
+            copy.copy(self.title.title),
+        )
+        return title_copy
+
     def __str__(self):
         if self.__title == None:
-            return "Add title"
-        return f"{self.__title}"
+            return "Title is empty"
+        return f"{self.__title.capitalize()}"
 
     def __is_valid(self, title):
         return True if type(title) is str and len(title) > 2 else False
