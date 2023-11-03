@@ -31,6 +31,15 @@ class NoteBook(UserDict):
         else:
             raise ValueError("Invalid record")
 
+    def check_title(self, new_note):
+        if new_note and new_note.title and type(new_note.title) == str:
+            for author, notes in self.data.items():
+                for note in notes:
+                    if new_note.author.value == author and new_note.title == note.title:
+                        raise ValueError(
+                            f"Note with {new_note.title} title is already exist"
+                        )
+
     def __repr__(self):
         string = ""
         for note in self.data.values():

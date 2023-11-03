@@ -42,12 +42,17 @@ def show_all(book):
     general_str = ""
     for key, value in book.items():
         if type(value) == list:
-            general_str += f"Author: {key}\n" + "".join([str(note) for note in value])
+            author_title = Fore.CYAN + f"\nAuthor:"
+            author_name = Fore.YELLOW + f"{key}"
+            author_notes = "".join([str(note) for note in value])
+            general_str += "{:}{:>10}{:^100}".format(
+                author_title, author_name, author_notes
+            )
         else:
             general_str += str(value)
     if general_str == "":
         return Fore.YELLOW + "Book is empty"
-    return general_str
+    return general_str[:-1:]
 
 
 def add_birthday(args, book):
@@ -95,6 +100,7 @@ def add_note(args, book):
         author = args[0]
         note = Note(author)
         note.input_title()
+        book.check_title(note)
         note.input_body()
         note.input_tag()
         book.add_note(note)
@@ -103,5 +109,37 @@ def add_note(args, book):
     return Fore.GREEN + "Note added."
 
 
-def notes_input(txt_name):
-    return input(txt_name)
+def change_note_title(args, book):
+    if len(args) == 3:
+        name, old_phone, new_phone = args
+        try:
+            contact = book.find(name)
+            contact.edit_phone(old_phone, new_phone)
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return (
+            Fore.RED
+            + "Invalid format. To change phone use next command - [change name old_phone new_phone]"
+        )
+    return Fore.GREEN + "Contact changed."
+
+
+def change_note_body(args, book):
+    pass
+
+
+def change_note_tag(args, book):
+    if len(args) == 3:
+        name, old_phone, new_phone = args
+        try:
+            contact = book.find(name)
+            contact.edit_phone(old_phone, new_phone)
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return (
+            Fore.RED
+            + "Invalid format. To change phone use next command - [change name old_phone new_phone]"
+        )
+    return Fore.GREEN + "Contact changed."

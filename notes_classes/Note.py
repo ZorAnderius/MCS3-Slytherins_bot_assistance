@@ -1,5 +1,5 @@
 from datetime import datetime
-from colorama import Fore
+from colorama import Fore, Back
 import uuid
 import sys
 
@@ -101,12 +101,12 @@ class Note:
     def input_title(self):
         title_text = self.__input_note(Fore.BLUE + "Enter title")
         if title_text:
-            self.__title = title_text
+            self.__title = title_text.strip().capitalize()
 
     def input_body(self):
         body_text = self.__input_note(Fore.BLUE + "Enter body")
         if body_text:
-            self.__body = body_text
+            self.__body = body_text.strip().capitalize()
 
     def input_tag(self):
         while True:
@@ -115,31 +115,67 @@ class Note:
                 break
             self.add_tag(tag_text)
 
-    def change_title(self, title: str):
+    def edit_title(self, title: str):
         self.add_title(title)
+
+    def edit_body(self, title, body):
+        self.add_title(title)
+
+    def edit_tag(self, title, old_tag, new_tag):
+        pass
 
     def __str__(self):
         tags_str = None
+
+        title_str = Fore.GREEN + "\nTitle:"
+        body_str = Fore.GREEN + "Note:"
+        tag_str = Fore.GREEN + "Tags:"
+        created_str = Fore.GREEN + "Created at:"
+
+        title_body = Fore.WHITE + "Add title\n"
+        note_body = Fore.WHITE + "Add note\n"
+        tag_body = ""
+        created_body = Fore.LIGHTBLACK_EX + f"{self.__created_at}"
+
         if self.tags and type(self.tags) is list:
             tags_str = ", ".join(tag.tag for tag in self.__tags)
         if self.__title is None and tags_str is None and self.__body is None:
-            return f"Title: Add title\nNote: Add note\nCreated: {self.__created_at}\n"
-        if tags_str is None and not self.__body:
-            return f"Title: Add title\nNote: Add note\nCreated: {self.__created_at}\n"
-        if self.__title is None and not self.__body:
-            return f"Title: Add title\nTags: {tags_str}\nNote: Add note\nCreated: {self.__created_at}\n"
-        if self.__title is None and tags_str is None:
-            return (
-                f"Title: Add title\nNote: {self.__body}\nCreated: {self.__created_at}\n"
-            )
-        if self.__title is None:
-            return f"Title: Add title\nTags: {tags_str}\nNote: {self.__body}\nCreated: {self.__created_at}\n"
-        if not self.__body:
-            return f"Title: {self.__title}\nTags: {tags_str}\nNote: Add note\nCreated: {self.__created_at}\n"
+            pass
+        elif tags_str is None and not self.__body:
+            title_body = Fore.WHITE + f"{self.__title}\n"
+        elif self.__title is None and not self.__body:
+            tag_body = Fore.WHITE + f"{tags_str}\n"
+        elif self.__title is None and tags_str is None:
+            note_body = Fore.WHITE + f"{self.__body}\n"
+        elif self.__title is None:
+            tag_body = Fore.WHITE + f"{tags_str}\n"
+            note_body = Fore.WHITE + f"{self.__body}\n"
+        elif not self.__body:
+            title_body = Fore.WHITE + f"{self.__title}\n"
+            tag_body = Fore.WHITE + f"{tags_str}\n"
+        else:
+            title_body = Fore.WHITE + f"{self.__title}\n"
+            note_body = Fore.WHITE + f"{self.__body}\n"
+            tag_body = Fore.WHITE + f"{tags_str}\n"
         if tags_str is None:
-            return f"Title: {self.__title}\nNote: {self.__body}\nCreated: {self.__created_at}\n"
-
-        return f"Title: {self.__title}\nTags: {tags_str}\nNote: {self.__body}\nCreated: {self.__created_at}\n"
+            return "{:<18}{:<5}{:<17}{:<2}{:<17}{:<2}\n".format(
+                title_str,
+                title_body,
+                body_str,
+                note_body,
+                created_str,
+                created_body,
+            )
+        return "{:<18}{:<5}{:<17}{:<2}{:<17}{:<2}{:<17}{:<2}\n".format(
+            title_str,
+            title_body,
+            tag_str,
+            tag_body,
+            body_str,
+            note_body,
+            created_str,
+            created_body,
+        )
 
     def __input_note(self, txt_message):
         input_txt = input(f"{txt_message} :")
@@ -149,7 +185,7 @@ class Note:
 if __name__ == "__main__":
     new_title = "Bargains"
     body = "fkfkdkfkkfkkfkfkkfkkdfkmmvmfd"
-    notes = Note()
+    notes = Note("John")
     print(notes)
     notes.add_body(body)
     print(notes)

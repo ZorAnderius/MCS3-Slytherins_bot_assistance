@@ -5,7 +5,7 @@ from .Field import Field
 
 class Name(Field):
     def __init__(self, name: str):
-        name = self.__formatted_name(name)
+        name = self.__formatted_name(name.title())
         if self.__is_valid(name):
             self.__name = name
         else:
@@ -30,11 +30,11 @@ class Name(Field):
         return self.__name
 
     def __is_valid(self, name: str) -> bool:
-        return True if re.match(r'\b[a-zA-Z ]+\b', name) else False
+        return True if re.match(r"\b[a-zA-Z ]+\b", name) else False
 
     def __formatted_name(self, name: str) -> str:
-        res = list(filter(lambda x: x, name.split(' ')))
-        return ' '.join(res)
+        res = list(filter(lambda x: x, name.split(" ")))
+        return " ".join(res)
 
     def __repr__(self) -> bool:
         if self.__name:
