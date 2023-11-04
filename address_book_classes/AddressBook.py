@@ -24,6 +24,8 @@ class AddressBook(UserDict):
             name = record['name'] if "name" in record else None
             phones = record['phones'] if "phones" in record else None
             birthday = record['birthday'] if "birthday" in record else None
+            email = record['email'] if "email" in record else None
+            address = record['address'] if "address" in record else None
             new_record = Record(name) 
             if phones and len(phones):
                 new_record.add_phones(phones)
@@ -39,7 +41,10 @@ class AddressBook(UserDict):
                 if year == current_date.year and month == current_date.month and day < current_date.day:
                     new_record.add_birthday(year, month, day)
                     self.data[key] = new_record
-                        
+            if email :       
+                new_record.add_email(email)
+            if address:
+                new_record.add_address(address)                        
             self.data[key] = new_record
         return self
 
@@ -127,11 +132,11 @@ class AddressBook(UserDict):
     def show_book(self):
         table = Table(title="AddressBook",style="blue", show_lines=True)
 
-        table.add_column("Contact name", justify="center", style="green", no_wrap=True)
+        table.add_column("Contact name", justify="center", style="green",min_width=20, no_wrap=True)
         table.add_column("Phones", style="yellow", justify="center", max_width=35, no_wrap=False)
-        table.add_column("Email", justify="center", style="yellow")
-        table.add_column("Birthday", justify="center", style="yellow")
-        table.add_column("Address", justify="center", style="green")
+        table.add_column("Email", justify="center",min_width=20, style="yellow")
+        table.add_column("Birthday", justify="center",min_width=20, style="yellow")
+        table.add_column("Address", justify="center",min_width=20, style="green")
         
         for key, record in self.data.items():  
             phone_txt = "----" if record.phones is None else "; ".join(phone.value for phone in record.phones)
