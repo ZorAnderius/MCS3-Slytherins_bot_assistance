@@ -1,5 +1,6 @@
 from datetime import datetime
 from colorama import Fore
+from rich.table import Table
 
 from .Name import Name
 from .Phone import Phone
@@ -22,8 +23,10 @@ class Record:
             self.__birthday = Birthday(year, month, day)
         else:
             self.__birthday = None
-
-        self.__address = Address(address)
+        if address and type(address) is str:
+            self.__address = Address(address)
+        else: 
+            self.__address = None
 
         self.__emails = Email(email)
 
@@ -33,7 +36,7 @@ class Record:
             "name": self.name.serialize(),
             "phones": [phone.serialize() for phone in self.phones],
             "birthday": self.birthday.serialize() if self.birthday else None,
-            'address': self.address.serialize()
+            'address': self.address.serialize() if self.address else None
         }
 
     @property
@@ -59,7 +62,7 @@ class Record:
     def birthday(self) -> datetime:
         return self.__birthday
 
-    def set_bithday(self, birthday: datetime):
+    def set_birthday(self, birthday: datetime):
         if birthday:
             self.__birthday = birthday
         else:
@@ -72,6 +75,7 @@ class Record:
     @address.setter
     def set_address(self, address: str):
         self.__address = Address(address)
+
 
     @property
     def emails(self) -> Email:
@@ -124,6 +128,20 @@ class Record:
                 print(result)
         else:
             print(f"No results found for '{keyword}'.")
+
+    def __str__(self) -> str:    
+        if self.phones:
+            str1 = Fore.YELLOW + "Contact name: "
+            str2 = Fore.LIGHTMAGENTA_EX + str(self.name)
+            str3 = Fore.YELLOW + "phones: "
+            str4 = Fore.WHITE + "; ".join(phone.value for phone in self.phones)
+            str5 = Fore.YELLOW + "address: "
+            str6 = Fore.WHITE + str(self.address)
+            return "{0}{1: <15} {2}\n{3}{4: <15} {5}{6}n".format(str1, str2, str3, str4, str5, str6)
+        if not self.phones and self.name.name is None:
+            return "None"
+        return "{0}{1: <15}: Phonebook is empty\n".format(str1, str2)
+
 
     def add_phones(self, phones):
         self.__phones = [Phone(phone) for phone in phones]

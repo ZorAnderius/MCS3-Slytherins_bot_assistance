@@ -1,4 +1,5 @@
 import re
+import copy
 
 from .Field import Field
 
@@ -26,15 +27,23 @@ class Name(Field):
             self.__name = None
             raise ValueError(f"{name} is invalid name")
 
+    def __copy__(self):
+        copy_name = Name(copy.copy(self.name.value))
+        return copy_name
+
     def serialize(self):
         return self.__name
 
     def __is_valid(self, name: str) -> bool:
-        return True if re.match(r'\b[a-zA-Z ]+\b', name) else False
+        return True if name and re.match(r"\b[a-zA-Z ]+\b", name) else False
 
-    def __formatted_name(self, name: str) -> str:
-        res = list(filter(lambda x: x, name.split(' ')))
-        return ' '.join(res)
+    def __formatted_name(self, name) -> str:
+        if type(name) == str:
+            res = list(filter(lambda x: x, name.split(" ")))
+            return " ".join(res)
+        if type(name) == Name:
+            res = list(filter(lambda x: x, name.name.split(" ")))
+            return " ".join(res)
 
     def __repr__(self) -> bool:
         if self.__name:

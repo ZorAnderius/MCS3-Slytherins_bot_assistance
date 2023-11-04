@@ -1,6 +1,8 @@
 from collections import UserDict, defaultdict
 from datetime import datetime
 import json
+from rich.table import Table
+
 
 from .Record import Record
 
@@ -122,11 +124,20 @@ class AddressBook(UserDict):
                 return res
 
 
-    def __repr__(self):
-        string = ''
-        for record in self.data.values():
-            string += str(record) + '\n'
-        return string[:-1:]
+    def show_book(self):
+        table = Table(title="AddressBook",style="blue", show_lines=True)
+
+        table.add_column("Contact name", justify="center", style="green", no_wrap=True)
+        table.add_column("Phones", style="yellow", justify="center", max_width=35, no_wrap=False)
+        table.add_column("Birthday", justify="center", style="yellow")
+        table.add_column("Address", justify="center", style="green")
+        
+        for key, record in self.data.items():  
+            phone_txt = "----" if record.phones is None else "; ".join(phone.value for phone in record.phones)
+            birthday_txt = "----" if record.birthday is None else str(record.birthday)
+            address_txt = "----" if record.address is None else record.address.address
+            table.add_row(record.name.value.capitalize(), phone_txt, birthday_txt, address_txt)
+        return table
 
     def get_birthdays_per_time(self, time):
         if not len(self.data.values()):

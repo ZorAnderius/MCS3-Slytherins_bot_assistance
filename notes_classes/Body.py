@@ -1,3 +1,6 @@
+import copy
+
+
 class Body:
     def __init__(self, body):
         if self.__is_valid(body):
@@ -15,6 +18,12 @@ class Body:
             self.__body = body
         else:
             raise ValueError("Invalid data")
+
+    def __copy__(self):
+        body_copy = Body(
+            copy.copy(self.body),
+        )
+        return body_copy
 
     def __str__(self):
         return f"{self.__body}"
