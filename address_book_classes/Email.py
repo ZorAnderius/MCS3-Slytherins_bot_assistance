@@ -5,6 +5,7 @@ class Email:
         if self.validate_email(email):
             self.__email = email
         else:
+            self.__email = None
             raise ValueError("Invalid email address")
     
     @property
@@ -16,6 +17,7 @@ class Email:
         if self.validate_email(email):
             self.__email = email
         else:
+            self.__email = email
             raise ValueError("Invalid email address")
 
     def validate_email(self, email):
@@ -47,7 +49,7 @@ class Email:
         return self.email
     
     def serialize(self):
-        return self.email
+        return self.__email
 
     @staticmethod
     def edit_email(contacts, old_email, new_email):

@@ -73,6 +73,8 @@ def add_email(args, book):
         name = args[0]
         try:
             contact = book.find(name)
+            if contact and contact.email:
+                return Fore.YELLOW + "Email already exists. Please use change email."
             new_email = ""
             while True:
                 try:
@@ -84,7 +86,6 @@ def add_email(args, book):
                         break
                     else:
                         print(Fore.RED + "Invalid text")
-                    break
                 except ValueError as e:
                     print(Fore.RED + str(e))
         except ValueError as e:
@@ -112,7 +113,6 @@ def change_email(args,book):
                         break
                     else:
                         print(Fore.RED + "Invalid text")
-                    break
                 except ValueError as e:
                     print(Fore.RED + str(e))
         except ValueError as e:
@@ -129,6 +129,8 @@ def add_address(args, book):
         name = args[0]
         try:
             contact = book.find(name)
+            if contact and contact.address:
+                return Fore.YELLOW + "Address already exists. Please use change address."
             new_address = ""
             while True:
                 try:
@@ -140,7 +142,6 @@ def add_address(args, book):
                         break
                     else:
                         print(Fore.RED + "Invalid text")
-                    break
                 except ValueError as e:
                     print(Fore.RED + str(e))
         except ValueError as e:
@@ -168,7 +169,6 @@ def change_address(args, book):
                         break
                     else:
                         print(Fore.RED + "Invalid text")
-                    break
                 except ValueError as e:
                     print(Fore.RED + str(e))
         except ValueError as e:

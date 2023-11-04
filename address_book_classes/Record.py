@@ -35,8 +35,6 @@ class Record:
         else: 
             self.__address = None
 
-        self.__emails = Email(email)
-
 
     def serialize(self):
         return {
@@ -228,7 +226,8 @@ class Record:
         if address and type(address) is str:
             temp_address = Address(address)
             if temp_address:
-                if self.__address and self.__address.get_address():
+                print(temp_address)
+                if self.__address :
                     raise ValueError(Fore.YELLOW + "Address already exists. Please use change email.")
                 self.__address = temp_address
                 return f"Address added: {address}"
@@ -252,5 +251,12 @@ class Record:
         if email and type(email) is str:
             if self.__email and self.__email.get_email() == email:
                 raise ValueError(Fore.YELLOW + "The new email is the same as the old one")
-            self.add_email(email)
+        temp_email = Email(email)
+        if temp_email:
+            if not self.__email:
+                raise ValueError(Fore.YELLOW + "Email does not exist. Please use add-email command.")
+            if self.__email and self.__email.email == email:
+                raise ValueError(Fore.YELLOW + "New email is the same as the existing one.")
+            self.__email = temp_email
+            return f"Email changed: {email}"
 
