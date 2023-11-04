@@ -8,17 +8,22 @@ from notes_classes.NoteBook import NoteBook
 from user_interface.command_functions import *
 from user_interface.parse_input import parse_input
 
-path = Path("data.json")
+book_path = Path("address_book.json")
+notebook_path = Path("note_book.json")
 
 
 def main():
     book = AddressBook()
     notebook = NoteBook()
     console = Console()
-    if os.path.exists(path):
-        new_book = book.read_from_file(path)
+    if os.path.exists(book_path):
+        new_book = book.read_from_file(book_path)
         if new_book and type(new_book) is dict:
             book = book.add_book(new_book)
+    if os.path.exists(notebook_path ):
+        new_notebook = notebook.read_from_file(notebook_path )
+        if new_notebook and type(new_notebook) is dict:
+            notebook = notebook.add_book(new_notebook)
     while True:
         user_input = input(Fore.CYAN + "Enter a command: ")
         if user_input:
@@ -73,7 +78,8 @@ def main():
             else:
                 print(Fore.YELLOW + "Invalid command")
 
-    book.save_to_file(path)
+    book.save_to_file(book_path)
+    notebook.save_to_file(notebook_path)
 
 
 if __name__ == "__main__":

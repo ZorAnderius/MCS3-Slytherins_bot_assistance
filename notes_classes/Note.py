@@ -144,6 +144,10 @@ class Note:
                 raise ValueError(
                     f"Tag {old_tag} is not in the {self.title.upper()} note"
                 )
+                
+    def add_created_at(self, date: str):
+        if date and type(date) == str:
+            self.__created_at = date
 
     def find_tag(self, tag: str) -> str or None:
         if list(filter(lambda p: p.tag == tag, self.tags)):

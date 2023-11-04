@@ -50,10 +50,9 @@ def show_all(book):
                 author_title, author_name, author_notes
             )
         else:
-            # general_str += str(value)
             return book.show_book()
     if general_str == "":
-        return Fore.YELLOW + "Book is empty"
+        return Fore.YELLOW + "Book1 is empty"
     return general_str[:-1:]
 
 def delete_record(args, book):
