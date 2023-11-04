@@ -1,19 +1,23 @@
 class Address:
-    def __init__(self, text=""):
-        self.set_address(text)
-
-    def set_address(self, text):
-        if text is None:
+    def __init__(self, address=""):
+        self.set_address(address)
+    @property
+    def address(self):
+        return self.__address
+    
+    
+    def set_address(self,address):
+        if address is None:
             raise ValueError("Address cannot be empty")
-        if not any(char.isalpha() for char in text):
+        if not any(char.isalpha() for char in address):
             raise ValueError("Address must contain at least one alphabet character")
-        self.text = text
+        self.__address = address
 
     def get_address(self):
-        return self.text
+        return self.__address
 
     def serialize(self):
-        return self.text
+        return self.__address
 
     def __str__(self):
-        return self.text
+        return self.__address

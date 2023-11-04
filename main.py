@@ -28,10 +28,18 @@ def main():
                 break
             elif command == "hello":
                 print(Fore.BLUE + "How can I help you?")
-            elif command == "add":
+            elif command == "add-contact":
                 print(added_contact(args, book))
-            elif command == "change":
+            elif command == "change-contact":
                 print(change_contact(args, book))
+            elif command == "add-email":
+                print(add_email(args, book))
+            elif command == "change-email":
+                print(change_email(args, book))
+            elif command == "add-address":
+                print(add_address(args, book))
+            elif command == "change-address":
+                print(change_address(args, book))
             elif command == "phone":
                 print(find_phone(args, book)[:-1:])
             elif command == "all-contacts":

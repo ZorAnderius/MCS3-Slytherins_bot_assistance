@@ -5,11 +5,12 @@ from rich.table import Table
 from .Name import Name
 from .Phone import Phone
 from .Birthday import Birthday
+from .Email import Email
 from .Address import Address
 
 
 class Record:
-    def __init__(self, name: str, phone: str = "", *birthday: (int, int, int), address: str = ''):
+    def __init__(self, name: str, phone: str = "", *birthday: (int, int, int), email: str="", address: str = ""):
         self.__name = Name(name)
 
         if phone:
@@ -23,6 +24,12 @@ class Record:
             self.__birthday = Birthday(year, month, day)
         else:
             self.__birthday = None
+            
+        if email and type(email) is str:
+            self.__email = Email(email)
+        else: 
+            self.__email = None
+            
         if address and type(address) is str:
             self.__address = Address(address)
         else: 
@@ -34,6 +41,7 @@ class Record:
             "name": self.name.serialize(),
             "phones": [phone.serialize() for phone in self.phones],
             "birthday": self.birthday.serialize() if self.birthday else None,
+            "email": self.email.serialize() if self.email else None,
             'address': self.address.serialize() if self.address else None
         }
 
@@ -55,6 +63,16 @@ class Record:
             self.__phones = phones
         else:
             self.__phones = []
+    
+    @property
+    def email(self):
+        return self.__email
+    
+    @email.setter
+    def set_email(self, email):
+        if email and type(email) is str:
+            temp_email = Email(email)
+            self.__email = temp_email
 
     @property
     def birthday(self) -> datetime:
@@ -151,13 +169,31 @@ class Record:
             raise ValueError("Invalid date format")
 
     def add_address(self, address: str):
-        if self.__address.get_address():
-            return "Address already exists. Please use change address."
-        self.__address.set_address(address)
-        return f"Address added: {address}"
+        if address and type(address) is str:
+            temp_address = Address(address)
+            if temp_address:
+                if self.__address and self.__address.get_address():
+                    raise ValueError(Fore.YELLOW + "Address already exists. Please use change email.")
+                self.__address = temp_address
+                return f"Address added: {address}"
 
     def change_address(self, address: str):
-        if not self.__address.get_address():
-            return "No existing address to change. Please use add address."
-        self.__address.set_address(address)
-        return f"Address changed to: {address}"
+        if address and type(address) is str:
+            if self.__address and self.__address.get_address() == address:
+                raise ValueError(Fore.YELLOW + "The new address is the same as the old one")
+            self.add_address(address)
+    
+    def add_email(self, email: str):
+        if email and type(email) is str:
+            temp_email = Email(email)
+            if temp_email:
+                if self.__email and self.__email.get_email():
+                    raise ValueError(Fore.YELLOW + "Email already exists. Please use change email.")
+                self.__email = temp_email
+                return f"Email added: {email}"
+
+    def change_email(self, email: str):
+        if email and type(email) is str:
+            if self.__email and self.__email.get_email() == email:
+                raise ValueError(Fore.YELLOW + "The new email is the same as the old one")
+            self.add_email(email)
