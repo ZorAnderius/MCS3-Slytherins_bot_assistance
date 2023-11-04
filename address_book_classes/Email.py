@@ -17,6 +17,17 @@ class Email:
         return matching_emails
 
     @staticmethod
+    def add_email(contacts, name, email):
+        for contact in contacts:
+            if contact.name == name:
+                if contact.email:
+                    raise ValueError("Contact already has an email address.")
+                if not Email.validate_email(email):
+                    raise ValueError("Invalid email address.")
+                contact.email = email
+                return f"Added email {email} to contact {name}."
+            
+    @staticmethod
     def suggest_variants(contacts, query):
         suggested_emails = [contact.email for contact in contacts if contact.email.startswith(query)]
         return suggested_emails
