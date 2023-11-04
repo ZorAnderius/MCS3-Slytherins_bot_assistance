@@ -47,8 +47,8 @@ class NoteBook(UserDict):
         return self
     
     def serialize(self):
+        nested_dict = dict()
         if len(self.data):
-            nested_dict = dict()
             for key, notes in self.data.items():
                 nested_dict[key] = [note.serialize() for note in notes]
 
@@ -59,7 +59,7 @@ class NoteBook(UserDict):
         return new_book
 
     def save_to_file(self, filename=''):
-        if filename and len(self.data):
+        if filename:
             with open(filename, 'w') as f_write:
                 json.dump(self.serialize(), f_write)
 
@@ -75,6 +75,24 @@ class NoteBook(UserDict):
                 if len(res):
                     res = self.de_serialize(res)
                 return res
+            
+    def show_book(self):
+        table = Table(title="NoteBook",style="blue", show_lines=True)
+
+        table.add_column("Author", justify="center", style="green",min_width=20, no_wrap=True)
+        table.add_column("Title", style="yellow", justify="center", max_width=35, no_wrap=False)
+        table.add_column("Note", justify="center",min_width=20, style="yellow")
+        table.add_column("Tags", justify="center",min_width=20, style="yellow")
+        table.add_column("Created at", justify="center",min_width=20, style="grey0")
+        
+        for key, notes in self.data.items():  
+            for note in notes:
+                tags_txt = "----" if note.tags is None else "; ".join(tag.tag for tag in note.tags)
+                title_txt = "----" if note.title is None else note.title.title
+                body_txt = "----" if note.body is None else note.body.body
+                created_at_txt = "----" if note.created_at is None else note.created_at
+                table.add_row(key.capitalize(),  title_txt, body_txt, tags_txt, created_at_txt)
+        return table
 
     def add_note(self, note):
         if note:
@@ -95,14 +113,14 @@ class NoteBook(UserDict):
 
     def find_note(self, name, title):
         notes = self.find_all_notes(name)
-        return list(filter(lambda note: note.title.lower() == title.lower(), notes))[0]
-
+        return list(filter(lambda note: note.title.title.lower() == title.lower(), notes))[0]
+    
     def remove_note(self, author, title):
         if author in self.data:
             notes = self.find_all_notes(author)
             note = self.find_note(author, title)
             index = notes.index(note)
-            if index:
+            if index >= 0:
                 notes.pop(index)
 
     def delete(self, name):
@@ -121,7 +139,7 @@ class NoteBook(UserDict):
                     if type(new_note.title) == Title:
                         if (
                             new_note.author.value.lower() == author.lower()
-                            and new_note.title.title.lower() == note.title.lower()
+                            and new_note.title.title.lower() == note.title.title.lower()
                         ):
                             raise ValueError(
                                 Fore.YELLOW
@@ -131,7 +149,7 @@ class NoteBook(UserDict):
                     elif type(new_note.title) == str:
                         if (
                             new_note.author.value.lower() == author.lower()
-                            and new_note.title.lower() == note.title.lower()
+                            and new_note.title.lower() == note.title.title.lower()
                         ):
                             raise ValueError(
                                 Fore.YELLOW

@@ -41,7 +41,6 @@ class Tag:
                 if tag.tag
                 and type(tag.tag) is str
                 and len(tag.tag) > 2
-                and tag.tag.isalpha()
                 else False
             )
         return (
