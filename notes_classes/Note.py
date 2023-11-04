@@ -15,23 +15,24 @@ from address_book_classes.Name import Name
 class Note:
     def __init__(self, author, title="", body="", *tags):
         self.__author = Name(author)
-        new_title = Title(title)
-        if new_title.title and type(new_title.title) is str:
-            self.__title = new_title
-        else:
+            
+        if title and type(title) is str:
+            self.__title = Title(title)
+        else: 
             self.__title = None
 
-        new_body = Body(body)
-        if new_body.body and type(new_body.body) is str:
-            self.__body = new_body
-        else:
+        if body and type(body) is str:
+            self.__body = Body(body)
+        else: 
             self.__body = None
+            
         if tags and type(tags[0]) == str:
             self.__tags = [Tag(tag) for tag in tags]
         elif tags and type(tags[0]) == Tag:
             self.__tags = tags
         else:
             self.__tags = []
+        
         self.__created_at = datetime.today().strftime("%a %d %b %Y, %I:%M%p")
 
     @property
@@ -52,9 +53,8 @@ class Note:
 
     @body.setter
     def set_body(self, body):
-        new_body = Body(body)
-        if new_body.body and type(new_body.body) is str:
-            self.__body = new_body
+        if body and type(body) is str:
+            self.__body = Body(body)
         else:
             self.__body = None
 
@@ -76,6 +76,15 @@ class Note:
     @property
     def id(self):
         return self.__id
+    
+    def serialize(self):
+        return {
+            "author": self.author.serialize() if self.author else None,
+            "title": self.title.serialize() if self.title else None,
+            "tags": [tag.serialize() for tag in self.tags] if self.tags else None,
+            "body": self.body.serialize() if self.body else None,
+            "created_at": self.created_at if self.created_at else None,
+        }
 
     def add_title(self, title: str):
         new_title = Title(title)
@@ -83,18 +92,14 @@ class Note:
             self.__title = new_title
 
     def add_body(self, body: str):
-        new_body = Body(body)
-        if new_body.body and type(new_body.body) is str:
-            self.__body = new_body
-        elif self.__body is not None:
-            pass
+        if body and type(body) is str:
+            self.__body = Body(body)
         else:
             self.__body = None
 
     def add_tag(self, tag: str):
         if list(filter(lambda x: x.tag == tag, self.__tags)):
             raise ValueError(Fore.YELLOW + f"{tag} is already exist")
-
         try:
             new_tag = Tag(tag)
         except ValueError as e:
@@ -104,16 +109,19 @@ class Note:
             raise ValueError(Fore.YELLOW + f"Duplicate tag {new_tag}")
         elif new_tag:
             self.__tags.append(new_tag)
+            
+    def add_tags(self, tags):
+        self.__tags = [Tag(tag) for tag in tags]
 
     def input_title(self):
         title_text = self.__input_note(Fore.BLUE + "Enter title")
         if title_text:
-            self.__title = title_text.strip().lower()
+            self.add_title(title_text.strip().lower())
 
     def input_body(self):
         body_text = self.__input_note(Fore.BLUE + "Enter body")
         if body_text:
-            self.__body = body_text.strip()
+            self.add_body(body_text.strip())
 
     def input_tag(self):
         while True:
@@ -183,7 +191,7 @@ class Note:
 
     def __str__(self):
         tags_str = None
-
+        print(type(self.body))
         title_str = Fore.GREEN + "\nTitle:"
         body_str = Fore.GREEN + "Note:"
         tag_str = Fore.GREEN + "Tags:"
@@ -237,18 +245,3 @@ class Note:
     def __input_note(self, txt_message):
         input_txt = input(f"{txt_message} : ")
         return input_txt
-
-
-if __name__ == "__main__":
-    new_title = "Bargains"
-    body = "fkfkdkfkkfkkfkfkkfkkdfkmmvmfd"
-    notes = Note("John")
-    print(notes)
-    notes.add_body(body)
-    print(notes)
-    notes.add_title(new_title)
-    print(notes)
-    notes.add_tag("zoo")
-    notes.add_tag("moo")
-    notes.add_tag("doo")
-    print(notes)

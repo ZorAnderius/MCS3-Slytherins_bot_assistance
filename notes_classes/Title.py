@@ -20,6 +20,9 @@ class Title:
     @title.setter
     def set_title(self, title=""):
         self.__title = title
+        
+    def serialize(self):
+        return self.__title
 
     def __copy__(self):
         title_copy = Title(

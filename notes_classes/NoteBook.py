@@ -23,29 +23,34 @@ class NoteBook(UserDict):
             raise ValueError("Data is empty")
 
     def add_book(self, data):
-        for key, note in data.items():
-            author = note['author'] if "author" in note else None
-            tags = note['tags'] if "tags" in note else None
-            body = note['body'] if "body" in note else None
-            created_at = note['created_at'] if "created_at" in note else None
-            new_note = None
-            if author and type(author) is str:
+        for author, notes in data.items():  
+            for note in notes:
+                author = note['author'] if "author" in note else None
+                title = note['title'] if "title" in note else None
+                tags = note['tags'] if "tags" in note else None
+                body = note['body'] if "body" in note else None
+                created_at = note['created_at'] if "created_at" in note else None
                 new_note = Note(author)
-            if new_note:
-                if tags and len(tags):
-                    new_note.add_tags(tags)
-                if body :       
-                    new_note.add_body(body)
-                if created_at:
-                    new_note.add_created_at(created_at)                        
-                self.data[key] = new_note
+                if new_note:
+                    if title:
+                        new_note.add_title(title)
+                    if tags and len(tags):
+                        new_note.add_tags(tags)
+                    if body :       
+                        new_note.add_body(body)
+                    if created_at:
+                        new_note.add_created_at(created_at)    
+                if not self.data:                    
+                    self.data[author] = [new_note]
+                else:
+                    self.data[author].append(new_note)
         return self
     
     def serialize(self):
         if len(self.data):
             nested_dict = dict()
-            for key, record in self.data.items():
-                nested_dict[key] = record.serialize()
+            for key, notes in self.data.items():
+                nested_dict[key] = [note.serialize() for note in notes]
 
         return {'data': nested_dict}
 

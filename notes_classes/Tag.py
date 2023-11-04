@@ -20,6 +20,9 @@ class Tag:
         else:
             self.__tag = None
             raise ValueError("Invalid tag. Please use letters only")
+        
+    def serialize(self):
+        return self.tag
 
     def __copy__(self):
         print(type(self.tag))

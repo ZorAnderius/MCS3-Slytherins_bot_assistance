@@ -6,13 +6,31 @@ from notes_classes.Note import Note
 
 
 def added_contact(args, book):
-    try:
-        name, phone = args
-        record = Record(name, phone)
-        book.add_record(record)
-    except ValueError as e:
-        return Fore.RED + str(e)
-    return Fore.GREEN + "Contact added."
+    if len(args) == 1:
+        name = args[0]
+        try:
+            phone = ""
+            while True:
+                try:
+                    phone = input(Fore.BLUE + "Enter phone (n-close): ")
+                    if phone == "n":
+                        return Fore.YELLOW + "No changes saved."
+                    if phone and type(phone) is str:
+                        record = Record(name, phone)
+                        book.add_record(record)
+                        break
+                    else:
+                        print(Fore.RED + "Invalid text")
+                except ValueError as e:
+                    print(Fore.RED + str(e))
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return (
+            Fore.RED
+            + "Invalid format. Missing one of the arguments - name"
+        )
+    return Fore.GREEN + "Phone added."
 
 
 def change_contact(args, book):
