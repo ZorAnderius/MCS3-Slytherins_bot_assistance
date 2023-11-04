@@ -1,6 +1,7 @@
 from colorama import Fore
 from pathlib import Path
 import os.path
+from rich.console import Console
 
 from address_book_classes.AddressBook import AddressBook
 from notes_classes.NoteBook import NoteBook
@@ -13,6 +14,7 @@ path = Path("data.json")
 def main():
     book = AddressBook()
     notebook = NoteBook()
+    console = Console()
     if os.path.exists(path):
         new_book = book.read_from_file(path)
         if new_book and type(new_book) is dict:
@@ -33,7 +35,7 @@ def main():
             elif command == "phone":
                 print(find_phone(args, book)[:-1:])
             elif command == "all-contacts":
-                print(show_all(book))
+                console.print(show_all(book))
             elif command == 'delete-record':
                 print (delete_record(args, book))
             elif command == "add-birthday":

@@ -50,7 +50,8 @@ def show_all(book):
                 author_title, author_name, author_notes
             )
         else:
-            general_str += str(value)
+            # general_str += str(value)
+            return book.show_book()
     if general_str == "":
         return Fore.YELLOW + "Book is empty"
     return general_str[:-1:]
