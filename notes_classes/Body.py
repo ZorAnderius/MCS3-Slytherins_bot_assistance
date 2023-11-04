@@ -6,6 +6,7 @@ class Body:
         if self.__is_valid(body):
             self.__body = body
         else:
+            self.__body = None
             raise ValueError("Invalid data")
 
     @property
@@ -17,7 +18,11 @@ class Body:
         if self.__is_valid(body):
             self.__body = body
         else:
+            self.__body = None
             raise ValueError("Invalid data")
+        
+    def serialize(self):
+        return self.body
 
     def __copy__(self):
         body_copy = Body(
@@ -25,8 +30,8 @@ class Body:
         )
         return body_copy
 
-    def __str__(self):
-        return f"{self.__body}"
-
     def __is_valid(self, body):
         return True if type(body) is str else False
+    
+    def __str__(self):
+        return f"{self.__body}"

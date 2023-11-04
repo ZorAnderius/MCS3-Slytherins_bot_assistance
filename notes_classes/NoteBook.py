@@ -1,5 +1,7 @@
 from collections import UserDict
 from colorama import Fore
+import json
+from rich.table import Table
 
 from .Title import Title
 from .Note import Note
@@ -21,7 +23,58 @@ class NoteBook(UserDict):
             raise ValueError("Data is empty")
 
     def add_book(self, data):
-        pass
+        for author, notes in data.items():  
+            for note in notes:
+                author = note['author'] if "author" in note else None
+                title = note['title'] if "title" in note else None
+                tags = note['tags'] if "tags" in note else None
+                body = note['body'] if "body" in note else None
+                created_at = note['created_at'] if "created_at" in note else None
+                new_note = Note(author)
+                if new_note:
+                    if title:
+                        new_note.add_title(title)
+                    if tags and len(tags):
+                        new_note.add_tags(tags)
+                    if body :       
+                        new_note.add_body(body)
+                    if created_at:
+                        new_note.add_created_at(created_at)    
+                if not self.data:                    
+                    self.data[author] = [new_note]
+                else:
+                    self.data[author].append(new_note)
+        return self
+    
+    def serialize(self):
+        if len(self.data):
+            nested_dict = dict()
+            for key, notes in self.data.items():
+                nested_dict[key] = [note.serialize() for note in notes]
+
+        return {'data': nested_dict}
+
+    def de_serialize(self, data):
+        new_book = data['data']
+        return new_book
+
+    def save_to_file(self, filename=''):
+        if filename and len(self.data):
+            with open(filename, 'w') as f_write:
+                json.dump(self.serialize(), f_write)
+
+    def read_from_file(self, filename):
+        if filename:
+            with open(filename, 'r') as f_read:
+                try:
+                    res = json.load(f_read)
+                except ValueError as e:
+                    return str(e)
+                except:
+                    return None
+                if len(res):
+                    res = self.de_serialize(res)
+                return res
 
     def add_note(self, note):
         if note:
