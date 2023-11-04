@@ -110,7 +110,7 @@ class Record:
         if not self.phones and self.name.name is None:   
             return 'None'
         return "{0}{1: <15}: Phonebook is empty\n".format(str1,  str2)
-
+    
     def search_contacts(self, keyword: str):
         keyword = keyword.lower()
         results = []

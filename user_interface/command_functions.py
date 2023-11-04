@@ -7,19 +7,42 @@ from notes_classes.Note import Note
 
 def added_contact(args, book):
     try:
-        name, phone = args
-        record = Record(name, phone)
-        book.add_record(record)
+        if len(args) == 1:
+            name = args[0]
+            phone = None
+            while True:
+                phone = input(Fore.BLUE + "Enter phone (n-close): ")
+                if phone == "n":
+                    return Fore.YELLOW + "Phone didn't create."
+                if phone and type(phone) is str:
+                    break
+                else:
+                    print(Fore.RED + "Invalid text")
+            record = Record(name, phone)
+            book.add_record(record)
+        else:
+            raise ValueError(Fore.RED
+            + "Command must include 1 argument - name. To create contact use next command - [add-contact name]"
+        )
     except ValueError as e:
         return Fore.RED + str(e)
     return Fore.GREEN + "Contact added."
 
 
-def change_contact(args, book):
-    if len(args) == 3:
-        name, old_phone, new_phone = args
+def change_phone(args, book):
+    if len(args) == 1:
+        name = args[0]
         try:
             contact = book.find(name)
+            while True:
+                phone = input(Fore.BLUE + "Enter old phone (n-close): ")
+                if phone == "n":
+                    return Fore.YELLOW + "Phone didn't create."
+                if phone and type(phone) is str:
+                    break
+                else:
+                    print(Fore.RED + "Invalid text")
+        
             contact.edit_phone(old_phone, new_phone)
         except ValueError as e:
             return Fore.RED + str(e)
@@ -256,8 +279,6 @@ def add_tag(args, book):
         try:
             note = book.find_note(author, title)
             if tag and type(tag) is str:
-                for note_tag in note.tags:
-                    pass
                 note.add_tag(tag)
         except ValueError as e:
             return Fore.RED + str(e)
