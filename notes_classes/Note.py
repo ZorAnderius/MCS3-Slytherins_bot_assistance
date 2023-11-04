@@ -191,7 +191,6 @@ class Note:
 
     def __str__(self):
         tags_str = None
-        print(type(self.body))
         title_str = Fore.GREEN + "\nTitle:"
         body_str = Fore.GREEN + "Note:"
         tag_str = Fore.GREEN + "Tags:"

@@ -67,6 +67,8 @@ def main():
                 print(change_note_body(args, notebook))
             elif command == "change-tag":
                 print(change_note_tag(args, notebook))
+            elif command == "delete-notes":
+                print(delete_notes(args, notebook))
             elif command == "remove-note":
                 print(remove_note(args, notebook))
             elif command == "remove-body":
@@ -74,7 +76,7 @@ def main():
             elif command == "remove-tag":
                 print(remove_note_tag(args, notebook))
             elif command == "all-notes":
-                print(show_all(notebook))
+                console.print(show_all(notebook))
             else:
                 print(Fore.YELLOW + "Invalid command")
 

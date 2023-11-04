@@ -1,8 +1,13 @@
 from colorama import Fore
 import copy
+from pathlib import Path
+from rich.table import Table
 
 from address_book_classes.Record import Record
 from notes_classes.Note import Note
+
+book_path = Path("address_book.json")
+notebook_path = Path("note_book.json")
 
 
 def added_contact(args, book):
@@ -30,6 +35,7 @@ def added_contact(args, book):
             Fore.RED
             + "Invalid format. Missing one of the arguments - name"
         )
+    book.save_to_file(book_path)
     return Fore.GREEN + "Phone added."
 
 
@@ -46,6 +52,7 @@ def change_contact(args, book):
             Fore.RED
             + "Invalid format. To change phone use next command - [change name old_phone new_phone]"
         )
+    book.save_to_file(book_path)
     return Fore.GREEN + "Contact changed."
 
 
@@ -60,17 +67,19 @@ def find_phone(args, book):
 def show_all(book):
     general_str = ""
     for key, value in book.items():
-        if type(value) == list:
-            author_title = Fore.CYAN + f"\nAuthor:"
-            author_name = Fore.YELLOW + f"{key}"
-            author_notes = "".join([str(note) for note in value])
-            general_str += "{:}{:>10}{:^100}".format(
-                author_title, author_name, author_notes
-            )
-        else:
-            return book.show_book()
-    if general_str == "":
-        return Fore.YELLOW + "Book1 is empty"
+        pass
+        # if type(value) == list:
+        #     author_title = Fore.CYAN + f"\nAuthor:"
+        #     author_name = Fore.YELLOW + f"{key}"
+        #     author_notes = "".join([str(note) for note in value])
+        #     general_str += "{:}{:>10}{:^100}".format(
+        #         author_title, author_name, author_notes
+        #     )
+        # else:
+    if book:
+        return book.show_book()
+    else:
+        return "[i]...Book is empty...[/i]"
     return general_str[:-1:]
 
 def delete_record(args, book):
@@ -79,6 +88,7 @@ def delete_record(args, book):
         contact = book.find(name)
         if contact:
             book.delete(name)  
+            book.save_to_file(book_path)
             return Fore.GREEN + 'Record deleted.'
         else:
             return Fore.RED + 'Contact not found.'
@@ -112,6 +122,7 @@ def add_email(args, book):
             Fore.RED
             + "Invalid format. Missing one of the arguments - name"
         )
+    book.save_to_file(book_path)
     return Fore.GREEN + "Email added."
 
 def change_email(args,book):
@@ -139,6 +150,7 @@ def change_email(args,book):
             Fore.RED
             + "Invalid format. Missing one of the arguments - name"
         )
+    book.save_to_file(book_path)
     return Fore.GREEN + "Email changed."
 
 def add_address(args, book):
@@ -168,6 +180,7 @@ def add_address(args, book):
             Fore.RED
             + "Invalid format. Missing one of the arguments - name"
         )
+    book.save_to_file(book_path)
     return Fore.GREEN + "Address added."
 
 def change_address(args, book):
@@ -195,6 +208,7 @@ def change_address(args, book):
             Fore.RED
             + "Invalid format. Missing one of the arguments - name"
         )
+    book.save_to_file(book_path)
     return Fore.GREEN + "Address changed."
 
 def add_birthday(args, book):
@@ -206,6 +220,7 @@ def add_birthday(args, book):
             contact.add_birthday(int(year), int(month), int(day))
         except ValueError as e:
             return Fore.RED + str(e)
+        book.save_to_file(book_path)
         return Fore.GREEN + "Birthday was added."
 
 
@@ -264,6 +279,7 @@ def add_note(args, book):
         book.add_note(note)
     except ValueError as e:
         return Fore.RED + str(e)
+    book.save_to_file(notebook_path)
     return Fore.GREEN + "Note added."
 
 
@@ -280,6 +296,7 @@ def add_tag(args, book):
             return Fore.RED + str(e)
     else:
         return Fore.RED + "Invalid format. Must be 3 arguments: name, title, new_tag"
+    book.save_to_file(notebook_path)
     return Fore.GREEN + "Tag updated."
 
 
@@ -311,6 +328,7 @@ def change_note_title(args, book):
             Fore.RED
             + "Invalid format. Missing one of the arguments: name, old_title or new_title"
         )
+    book.save_to_file(notebook_path)
     return Fore.GREEN + "Title changed."
 
 
@@ -331,7 +349,8 @@ def change_note_body(args, book):
         except ValueError as e:
             return Fore.RED + str(e)
     else:
-        return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+        return Fore.RED + "Invalid format. To change note body use next command - [change-body name]"
+    book.save_to_file(notebook_path)
     return Fore.GREEN + "Note changed."
 
 
@@ -357,9 +376,23 @@ def change_note_tag(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. To change tag use next command - [change-tag name title old_tag]"
+            + "Invalid format. To change tag use next command - [change-tag name]"
         )
+    book.save_to_file(notebook_path)
     return Fore.GREEN + "Tag changed."
+
+def delete_notes(args, book):
+    author = args[0]
+    try:
+        note = book.find_all_notes(author)
+        if note:
+            book.delete(author)  
+            book.save_to_file(notebook_path)
+            return Fore.GREEN + 'Notes deleted.'
+        else:
+            return Fore.RED + 'Notes not found.'
+    except ValueError as e:
+        return Fore.RED + str(e)
 
 
 def remove_note(args, book):
@@ -371,6 +404,7 @@ def remove_note(args, book):
             return Fore.RED + str(e)
     else:
         return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+    book.save_to_file(notebook_path)
     return Fore.GREEN + "Note deleted."
 
 
@@ -384,6 +418,7 @@ def remove_note_body(args, book):
             return Fore.RED + str(e)
     else:
         return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+    book.save_to_file(notebook_path)
     return Fore.GREEN + "Note body deleted."
 
 
@@ -397,4 +432,5 @@ def remove_note_tag(args, book):
             return Fore.RED + str(e)
     else:
         return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+    book.save_to_file(notebook_path)
     return Fore.GREEN + "Note body deleted."
