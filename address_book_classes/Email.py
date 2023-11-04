@@ -3,7 +3,18 @@ import re
 class Email:
     def __init__(self, email):
         if self.validate_email(email):
-            self.email = email
+            self.__email = email
+        else:
+            raise ValueError("Invalid email address")
+    
+    @property
+    def email(self):
+        return self.__email
+    
+    @email.setter
+    def set_email(self, email):
+        if self.validate_email(email):
+            self.__email = email
         else:
             raise ValueError("Invalid email address")
 
@@ -31,6 +42,12 @@ class Email:
     def suggest_variants(contacts, query):
         suggested_emails = [contact.email for contact in contacts if contact.email.startswith(query)]
         return suggested_emails
+    
+    def get_email(self):
+        return self.email
+    
+    def serialize(self):
+        return self.email
 
     @staticmethod
     def edit_email(contacts, old_email, new_email):

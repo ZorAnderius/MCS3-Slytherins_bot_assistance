@@ -21,10 +21,10 @@ class AddressBook(UserDict):
         
     def add_book(self, data):
         for key, record in data.items():
-            name = record['name']
-            phones = record['phones']
-            birthday = record['birthday']
-            new_record = Record(name)
+            name = record['name'] if "name" in record else None
+            phones = record['phones'] if "phones" in record else None
+            birthday = record['birthday'] if "birthday" in record else None
+            new_record = Record(name) 
             if phones and len(phones):
                 new_record.add_phones(phones)
             if birthday:
@@ -129,14 +129,16 @@ class AddressBook(UserDict):
 
         table.add_column("Contact name", justify="center", style="green", no_wrap=True)
         table.add_column("Phones", style="yellow", justify="center", max_width=35, no_wrap=False)
+        table.add_column("Email", justify="center", style="yellow")
         table.add_column("Birthday", justify="center", style="yellow")
         table.add_column("Address", justify="center", style="green")
         
         for key, record in self.data.items():  
             phone_txt = "----" if record.phones is None else "; ".join(phone.value for phone in record.phones)
+            email_txt = "----" if record.email is None else record.email.email
             birthday_txt = "----" if record.birthday is None else str(record.birthday)
             address_txt = "----" if record.address is None else record.address.address
-            table.add_row(record.name.value.capitalize(), phone_txt, birthday_txt, address_txt)
+            table.add_row(record.name.value.capitalize(),  phone_txt,email_txt, birthday_txt, address_txt)
         return table
 
     def get_birthdays_per_time(self, time):

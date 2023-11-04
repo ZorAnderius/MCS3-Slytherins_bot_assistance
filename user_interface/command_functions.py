@@ -67,6 +67,118 @@ def delete_record(args, book):
             return Fore.RED + 'Contact not found.'
     except ValueError as e:
         return Fore.RED + str(e)
+    
+def add_email(args, book):
+    if len(args) == 1:
+        name = args[0]
+        try:
+            contact = book.find(name)
+            new_email = ""
+            while True:
+                try:
+                    new_email = input(Fore.BLUE + "Enter new email (n-close): ")
+                    if new_email == "n":
+                        return Fore.YELLOW + "No changes saved."
+                    if new_email and type(new_email) is str:
+                        contact.add_email(new_email)
+                        break
+                    else:
+                        print(Fore.RED + "Invalid text")
+                    break
+                except ValueError as e:
+                    print(Fore.RED + str(e))
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return (
+            Fore.RED
+            + "Invalid format. Missing one of the arguments - name"
+        )
+    return Fore.GREEN + "Email added."
+
+def change_email(args,book):
+    if len(args) == 1:
+        name = args[0]
+        try:
+            contact = book.find(name)
+            new_email = ""
+            while True:
+                try:
+                    new_email = input(Fore.BLUE + "Enter new email (n-close): ")
+                    if new_email == "n":
+                        return Fore.YELLOW + "No changes saved."
+                    if new_email and type(new_email) is str:
+                        contact.change_email(new_email)
+                        break
+                    else:
+                        print(Fore.RED + "Invalid text")
+                    break
+                except ValueError as e:
+                    print(Fore.RED + str(e))
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return (
+            Fore.RED
+            + "Invalid format. Missing one of the arguments - name"
+        )
+    return Fore.GREEN + "Email changed."
+
+def add_address(args, book):
+    if len(args) == 1:
+        name = args[0]
+        try:
+            contact = book.find(name)
+            new_address = ""
+            while True:
+                try:
+                    new_address = input(Fore.BLUE + "Enter new address (n-close): ")
+                    if new_address == "n":
+                        return Fore.YELLOW + "No changes saved."
+                    if new_address and type(new_address) is str:
+                        contact.add_address(new_address)
+                        break
+                    else:
+                        print(Fore.RED + "Invalid text")
+                    break
+                except ValueError as e:
+                    print(Fore.RED + str(e))
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return (
+            Fore.RED
+            + "Invalid format. Missing one of the arguments - name"
+        )
+    return Fore.GREEN + "Address added."
+
+def change_address(args, book):
+    if len(args) == 1:
+        name = args[0]
+        try:
+            contact = book.find(name)
+            new_address = ""
+            while True:
+                try:
+                    new_address = input(Fore.BLUE + "Enter new address (n-close): ")
+                    if new_address == "n":
+                        return Fore.YELLOW + "No changes saved."
+                    if new_address and type(new_address) is str:
+                        contact.change_address(new_address)
+                        break
+                    else:
+                        print(Fore.RED + "Invalid text")
+                    break
+                except ValueError as e:
+                    print(Fore.RED + str(e))
+        except ValueError as e:
+            return Fore.RED + str(e)
+    else:
+        return (
+            Fore.RED
+            + "Invalid format. Missing one of the arguments - name"
+        )
+    return Fore.GREEN + "Address changed."
 
 def add_birthday(args, book):
     if len(args) == 4:
