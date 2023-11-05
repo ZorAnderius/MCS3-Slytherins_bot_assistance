@@ -2,10 +2,10 @@ from colorama import Fore
 import copy
 
 from pathlib import Path
-from rich.table import Table
-from rich.console import Console
+
 
 from address_book_classes.Record import Record
+from address_book_classes.AddressBook import AddressBook
 from notes_classes.Note import Note
 
 book_path = Path("address_book.json")
@@ -41,7 +41,7 @@ def added_contact(args, book):
     return Fore.GREEN + "Phone added."
 
 
-def change_contact(args, book):
+def change_phone(args, book):
     if len(args) == 3:
         name, old_phone, new_phone = args
         try:
@@ -52,7 +52,7 @@ def change_contact(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. To change phone use next command - [change name old_phone new_phone]"
+            + "Invalid format. To change phone use next command - [change-phone name old_phone new_phone]"
         )
     book.save_to_file(book_path)
     return Fore.GREEN + "Contact changed."
@@ -455,26 +455,32 @@ def remove_note_tag(args, book):
 def search_by_name(args, book):
     if len(args) == 1:
         name_prefix = args[0]
-        result = book.search_contacts_by_name(name_prefix)
-        return display_search_results(result)
+        filter_book = book.search_contacts_by_name(name_prefix)
+        if filter_book and type(filter_book) is AddressBook:
+            return filter_book.show_book()
+        else:
+            return "[i]No contact found with this name[/i]"
     else:
-        return "Invalid format. Please provide a single argument for the name search."
+        return "[i]Invalid format. Please provide a single argument for the name search.[/i]"  
         
 def search_by_phone(args, book):
     if len(args) == 1:
         phone_prefix = args[0]
-        result = book.search_contacts_by_phone(phone_prefix)
-        return display_search_results(result)
+        filter_book = book.search_contacts_by_phone(phone_prefix)
+        return filter_book.show_book()
     else:
-        return "Invalid format. Please provide a single argument for the phone search."    
+        return "[i]Invalid format. Please provide a single argument for the phone search.[/i]"    
         
 def search_by_email(args, book):
     if len(args) == 1:
         email = args[0]
-        result = book.search_contacts_by_email(email)
-        return display_search_results(result)
+        filter_book = book.search_contacts_by_email(email)
+        if filter_book and type(filter_book) is AddressBook:
+            return filter_book.show_book()
+        else:
+            return "[i]No contact found with this email[/i]"
     else:
-        return "Invalid format. Please provide a single argument for the email search."    
+        return "[i]Invalid format. Please provide a single argument for the email search.[/i]"    
 
 
 def remove_phone(args, book):
@@ -510,28 +516,3 @@ def remove_phone(args, book):
             Fore.RED
             + "Invalid format. The 'remove-phone' command should be in the format: remove-phone [name]"
         )
-
-
-
-
-def display_search_results(results):
-    if isinstance(results, str):
-        return results
-    else:
-        table = Table(title="Search Results", style="blue", show_lines=True)
-        table.add_column("Contact name", justify="center", style="green", min_width=20, no_wrap=True)
-        table.add_column("Phones", style="yellow", justify="center", max_width=35, no_wrap=False)
-        table.add_column("Email", justify="center", min_width=20, style="yellow")
-        table.add_column("Birthday", justify="center", min_width=20, style="yellow")
-        table.add_column("Address", justify="center", min_width=20, style="green")
-
-        for key, record in results.items():
-            phone_txt = "----" if record.phones is None else "; ".join(phone.value for phone in record.phones)
-            email_txt = "----" if record.email is None else record.email.email
-            birthday_txt = "----" if record.birthday is None else str(record.birthday)
-            address_txt = "----" if record.address is None else record.address.address
-            table.add_row(record.name.value.capitalize(), phone_txt, email_txt, birthday_txt, address_txt)
-            
-        console = Console()
-        console.print(table)
-        return ""

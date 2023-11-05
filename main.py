@@ -35,8 +35,8 @@ def main():
                 print(Fore.BLUE + "How can I help you?")
             elif command == "add-contact":
                 print(added_contact(args, book))
-            elif command == "change-contact":
-                print(change_contact(args, book))
+            elif command == "change-phone":
+                print(change_phone(args, book))
             elif command == "add-email":
                 print(add_email(args, book))
             elif command == "change-email":
@@ -51,18 +51,12 @@ def main():
                 console.print(show_all(book))
             elif command == 'delete-record':
                 print (delete_record(args, book))
-            elif command == "search-by-name":
-                result = search_by_name(args, book)
-                if result is not None:
-                    console.print(result)
-            elif command == "search-by-phone":
-                result = search_by_phone(args, book)
-                if result is not None:
-                    console.print(result)
-            elif command == "search-by-email":
-                result = search_by_email(args, book)
-                if result is not None:
-                    console.print(result)
+            elif command == "search-name":
+                console.print(search_by_name(args, book))
+            elif command == "search-phone":
+                console.print(search_by_phone(args, book))
+            elif command == "search-email":
+                console.print(search_by_email(args, book))
             elif command == "remove-phone":
                 remove_phone(args, book)
             elif command == "add-birthday":

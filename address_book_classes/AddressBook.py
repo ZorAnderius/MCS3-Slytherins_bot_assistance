@@ -2,6 +2,7 @@ from collections import UserDict, defaultdict
 from datetime import datetime
 import json
 from rich.table import Table
+import re
 
 from .Record import Record
 
@@ -138,7 +139,7 @@ class AddressBook(UserDict):
         table.add_column("Address", justify="center",min_width=20, style="green")
         
         for key, record in self.data.items():  
-            phone_txt = "----" if record.phones is None else "; ".join(phone.value for phone in record.phones)
+            phone_txt = "----" if record.phones is None or len(record.phones) == 0 else "; ".join(phone.value for phone in record.phones)
             email_txt = "----" if record.email is None else record.email.email
             birthday_txt = "----" if record.birthday is None else str(record.birthday)
             address_txt = "----" if record.address is None else record.address.address
@@ -208,45 +209,36 @@ class AddressBook(UserDict):
         return temp_dict
 
     def search_contacts_by_name(self, name_prefix):
-        if len(name_prefix) < 2:
-            return "At least two characters are required for search"
-
-        matching_contacts = {}
-        for key, record in self.data.items():
-            if record.name.value.lower().startswith(name_prefix.lower()):
-                matching_contacts[key] = record
-
-        if matching_contacts:
-            return matching_contacts
-        else:
-            return "No contact found with this name"
+        if name_prefix and type(name_prefix) is str:
+            if len(name_prefix) < 2:
+                return "[i]At least two characters are required for search[/i]"
+            filter_book = AddressBook()
+            for key, record in self.data.items():            
+                if re.findall(name_prefix, key, re.IGNORECASE):
+                    filter_book.add_record(record)
+            return filter_book
 
     def search_contacts_by_phone(self, phone_prefix):
-        if len(phone_prefix) < 2:
-            return "At least two characters are required for search"
-
-        matching_contacts = {}
-        for key, record in self.data.items():
-            for phone in record.phones:
-                if phone.value.startswith(phone_prefix):
-                    matching_contacts[key] = record
-
-        if matching_contacts:
-            return matching_contacts
-        else:
-            return "No contacts found with this phone number"
+        if phone_prefix and type(phone_prefix) is str:
+            if len(phone_prefix) < 2:
+                return "[i]At least two characters are required for search[/i]"
+            filter_book = AddressBook()
+            for _, record in self.data.items():
+                if list(filter(lambda phone: re.findall(phone_prefix, phone.value),record.phones)):
+                    filter_book.add_record(record)
+            return filter_book
 
     def search_contacts_by_email(self, email):
-        if email:
-            matching_contacts = {}
-            for key, record in self.data.items():
-                if record.email and record.email.email == email:
-                    matching_contacts[key] = record
+        if email and type(email) is str:
+            if len(email) < 2:
+                return "[i]At least two characters are required for search[/i]"
+            filter_book = AddressBook()
+            for _, record in self.data.items():
+                if re.findall(email, record.email.email, re.IGNORECASE):
+                    filter_book.add_record(record)
 
-            if matching_contacts:
-                return matching_contacts
-            else:
-                return "No contacts found with this email"
+            return filter_book
+    
 
 
 
