@@ -51,6 +51,20 @@ def main():
                 console.print(show_all(book))
             elif command == 'delete-record':
                 print (delete_record(args, book))
+            elif command == "search-by-name":
+                result = search_by_name(args, book)
+                if result is not None:
+                    console.print(result)
+            elif command == "search-by-phone":
+                result = search_by_phone(args, book)
+                if result is not None:
+                    console.print(result)
+            elif command == "search-by-email":
+                result = search_by_email(args, book)
+                if result is not None:
+                    console.print(result)
+            elif command == "remove-phone":
+                remove_phone(args, book)
             elif command == "add-birthday":
                 print(add_birthday(args, book))
             elif command == "show-birthday":

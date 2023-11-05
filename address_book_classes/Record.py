@@ -96,7 +96,7 @@ class Record:
     @property
     def emails(self) -> Email:
         return self.__emails
-
+        
     def set_emails(self, emails: str):
         self.__emails = Email(emails)
 
