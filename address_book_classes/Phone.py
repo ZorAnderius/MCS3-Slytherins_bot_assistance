@@ -6,10 +6,10 @@ class Phone(Field):
     def __init__(self, phone: str):
         if self.is_valid(phone):
             self.__phone = phone
+            super().__init__(self.phone)
         else:
             self.__phone = None
             raise ValueError(f"{phone} is invalid phone number. Length must more than 10 but less than 15 values")
-        super().__init__(self.phone)
 
     def ph_length(self, phone: str) -> int:
         regex = r"([^\d]?)"
@@ -26,7 +26,7 @@ class Phone(Field):
             if phone_len > 15 or phone_len < 10:
                 return False
         else:
-            if self.ph_length(phone) > 10:
+            if self.ph_length(phone) > 10 or self.ph_length(phone) < 10:
                 return False
             
         regex = r"\+?[\d\s\-\(\)]+"

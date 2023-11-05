@@ -1,5 +1,6 @@
 from collections import UserDict, defaultdict
 from datetime import datetime
+from colorama import Fore
 import json
 from rich.table import Table
 import re
@@ -51,7 +52,7 @@ class AddressBook(UserDict):
     def add_record(self, record):
         if record:
             if record.name.value in self.data:
-                self.data[record.name.value].add_phone(record.phones[0].value)
+                raise ValueError(Fore.YELLOW + "Record is already exist")
             else:
                 self.data[record.name.value] = record
         else:
@@ -68,35 +69,6 @@ class AddressBook(UserDict):
     def delete(self, name):
         if name in self.data:
             del self.data[name]
-
-    def search_contacts_by_name(self, name_prefix):
-        if len(name_prefix) < 2:
-            return "At least two characters are required for search"
-
-        matching_contacts = {}
-        for key, record in self.data.items():
-            if record.name.value.lower().startswith(name_prefix.lower()):
-                matching_contacts[key] = record
-
-        if matching_contacts:
-            return matching_contacts
-        else:
-            return "No contact found with this name"
-
-    def search_contacts_by_phone(self, phone_prefix):
-        if len(phone_prefix) < 2:
-            return "At least two characters are required for search"
-
-        matching_contacts = {}
-        for key, record in self.data.items():
-            for phone in record.phones:
-                if phone.value.startswith(phone_prefix):
-                    matching_contacts[key] = record
-
-        if matching_contacts:
-            return matching_contacts
-        else:
-            return "No contacts found with this phone number"
 
     def serialize(self):
         if len(self.data):
@@ -189,7 +161,13 @@ class AddressBook(UserDict):
         dict_of_users = self.__sorted_users_notes((dict_of_users))
         if not dict_of_users:
             raise ValueError("Your calendar is empty")
-        return dict_of_users
+        birth_book = AddressBook()
+        for key, contacts in dict_of_users.items():
+            for _, names in contacts.items(): 
+                for name in names: 
+                    if name in self.data:
+                        birth_book[name] = self.data[name]
+        return birth_book
     
     def __days_per_next_year(self, date):
         next_year = date.replace(year=date.year + 5).year

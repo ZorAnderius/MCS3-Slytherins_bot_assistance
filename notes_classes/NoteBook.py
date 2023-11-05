@@ -114,7 +114,8 @@ class NoteBook(UserDict):
 
     def find_note(self, name, title):
         notes = self.find_all_notes(name)
-        return list(filter(lambda note: note.title.title.lower() == title.lower(), notes))[0]
+        if notes and type(notes) is list:
+            return list(filter(lambda note: note.title.title.lower() == title.lower(), notes))[0]
     
     def search_by_title(self, title):
         if title and type(title) is str:

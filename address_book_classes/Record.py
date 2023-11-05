@@ -158,6 +158,82 @@ class Record:
             return "None"
         return "{0}{1: <15}: Phonebook is empty\n".format(str1, str2)
 
+    def input_phones(self):
+        while True:
+            phone_text = self.__input_note(Fore.BLUE + "Enter phone (n-close)")
+            if phone_text == "n":
+                print(Fore.YELLOW + "Phone didn't save.")
+                break
+            if list(filter(lambda phone: phone.value == phone_text, self.__phones)):
+                print(Fore.YELLOW + f"{phone_text} is already exist")
+                continue
+            try:
+                self.add_phone(phone_text)
+                break
+            except ValueError as e:
+                print(Fore.RED + str(e))
+            
+    def input_email(self):
+        while True:
+            try:
+                new_email = input(Fore.BLUE + "Enter email (n-close): ")
+                if new_email == "n":
+                    print(Fore.YELLOW + "Email didn't save")
+                    break
+                if new_email and type(new_email) is str:
+                    self.add_email(new_email)
+                    break
+                else:
+                    print(Fore.RED + "Invalid text")
+            except ValueError as e:
+                print(Fore.RED + str(e))
+    
+    def input_birthday(self):
+        print(Fore.BLUE + "Enter contact's birthday")
+        err_mess= ''
+        try:
+            while True:
+                if err_mess == 'day is out of range for month':
+                    day_txt = self.__input_date("Day")
+                    if day_txt == 'n':
+                        print(Fore.YELLOW + "Birthday didn't save")
+                        break
+                else:
+                    year_txt = self.__input_date("Year")
+                    if year_txt == 'n':
+                        print(Fore.YELLOW + "Birthday didn't save")
+                        break
+                    month_txt = self.__input_date("Month")
+                    if month_txt== 'n':
+                        print(Fore.YELLOW + "Birthday didn't save")
+                        break
+                    day_txt = self.__input_date("Day")
+                    if day_txt == 'n':
+                        print(Fore.YELLOW + "Birthday didn't save")
+                        break
+                try:
+                    if year_txt and month_txt and day_txt:
+                        self.add_birthday(int(year_txt), int(month_txt), int(day_txt))
+                        break
+                except ValueError as e:
+                    err_mess = str(e)
+                    print(Fore.RED + str(e))
+        except ValueError as e:
+            return Fore.RED + str(e)
+
+    def input_address(self):
+        while True:
+            try:
+                new_address = input(Fore.BLUE + "Enter address (n-close): ")
+                if new_address == "n":
+                    print(Fore.YELLOW + "Address didn't save")
+                if new_address and type(new_address) is str:
+                    self.add_address(new_address)
+                    break
+                else:
+                    print(Fore.RED + "Invalid text")
+            except ValueError as e:
+                print(Fore.RED + str(e))
 
     def add_phones(self, phones):
         self.__phones = [Phone(phone) for phone in phones]
@@ -197,7 +273,6 @@ class Record:
                 return f"Record for {self.name} with phone {phone} deleted."
 
             return f"No record found for phone {phone}."
-       
 
     def edit_phone(self, old_phone: str, new_phone: str):
         new_phone = Phone(new_phone)
@@ -259,3 +334,36 @@ class Record:
             self.__email = temp_email
             return f"Email changed: {email}"
 
+    def __input_date(self, txt_message):
+        while True:
+            input_txt = input(Fore.BLUE + f"{txt_message} (n-close): ")
+            if input_txt == 'n':
+                return input_txt
+            value = None
+            if input_txt and input_txt.isdigit():
+                value = int(input_txt)
+            else:
+                print(Fore.RED + f'Invalid {txt_message.lower()}')
+                continue
+            if value:
+                if txt_message == "Year":
+                    if value >= 1 and value <= datetime.today().date().year:
+                        return input_txt
+                    else:
+                        print(Fore.RED +"Year is invalid")
+                if txt_message == "Month":
+                    if value >= 1 and value <= 12:
+                        return input_txt
+                    else:
+                        print(Fore.RED +"Month is invalid")
+                if txt_message == "Day":
+                    if value >= 1 and value <= 31:
+                        return input_txt
+                    else:
+                        print("Day is invalid")
+            else:
+                print("Invalid format")
+
+    def __input_note(self, txt_message):
+        input_txt = input(f"{txt_message} : ")
+        return input_txt
