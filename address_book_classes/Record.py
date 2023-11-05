@@ -196,7 +196,6 @@ class Record:
                 if err_mess == 'day is out of range for month':
                     day_txt = self.__input_date("Day")
                     if day_txt == 'n':
-                        print(Fore.YELLOW + "Birthday didn't save")
                         break
                 else:
                     year_txt = self.__input_date("Year")
@@ -209,7 +208,6 @@ class Record:
                         break
                     day_txt = self.__input_date("Day")
                     if day_txt == 'n':
-                        print(Fore.YELLOW + "Birthday didn't save")
                         break
                 try:
                     if year_txt and month_txt and day_txt:
@@ -301,7 +299,7 @@ class Record:
         if address and type(address) is str:
             temp_address = Address(address)
             if temp_address:
-                if self.__address :
+                if self.__address:
                     raise ValueError(Fore.YELLOW + "Address already exists. Please use change email.")
                 self.__address = temp_address
                 return f"Address added: {address}"
@@ -310,7 +308,8 @@ class Record:
         if address and type(address) is str:
             if self.__address and self.__address.get_address() == address:
                 raise ValueError(Fore.YELLOW + "The new address is the same as the old one")
-            self.add_address(address)
+            temp_address = Address(address)
+            self.__address = temp_address
     
     def add_email(self, email: str):
         if email and type(email) is str:

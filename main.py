@@ -32,6 +32,7 @@ def main():
         user_input = prompt(Fore.CYAN + "Enter a command: ", completer=command_completer())
         if user_input:
             command, *args = parse_input(user_input)
+
             handle_command(command, args, book, notebook, console, book_path, notebook_path)
 
 def command_completer():
