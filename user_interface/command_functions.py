@@ -3,6 +3,7 @@ import copy
 
 from pathlib import Path
 from rich.table import Table
+from rich.console import Console
 
 from address_book_classes.Record import Record
 from notes_classes.Note import Note
