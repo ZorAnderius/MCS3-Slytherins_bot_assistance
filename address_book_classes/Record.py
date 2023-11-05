@@ -226,7 +226,6 @@ class Record:
         if address and type(address) is str:
             temp_address = Address(address)
             if temp_address:
-                print(temp_address)
                 if self.__address :
                     raise ValueError(Fore.YELLOW + "Address already exists. Please use change email.")
                 self.__address = temp_address

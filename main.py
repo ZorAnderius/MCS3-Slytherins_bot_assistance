@@ -81,14 +81,24 @@ def main():
                 print(change_note_body(args, notebook))
             elif command == "change-tag":
                 print(change_note_tag(args, notebook))
+            elif command == "delete-notes":
+                print(delete_notes(args, notebook))
             elif command == "remove-note":
                 print(remove_note(args, notebook))
             elif command == "remove-body":
                 print(remove_note_body(args, notebook))
             elif command == "remove-tag":
                 print(remove_note_tag(args, notebook))
+            elif command == "search-tag":
+                console.print(search_by_tag(args, notebook))
+            elif command == "search-author":
+                console.print(search_by_author(args, notebook))
+            elif command == "search-title":
+                console.print(search_by_title(args, notebook))
+            elif command == "sort-notes":
+                console.print(sort_notes(notebook))
             elif command == "all-notes":
-                print(show_all(notebook))
+                console.print(show_all(notebook))
             else:
                 print(Fore.YELLOW + "Invalid command")
 
