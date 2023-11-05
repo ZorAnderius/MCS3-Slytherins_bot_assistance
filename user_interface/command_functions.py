@@ -260,7 +260,7 @@ def show_birthday(args, book):
         name = args[0]
         try:
             contact = book.find(name)
-            if contact and contact.birthday:
+            if contact and not contact.birthday:
                 return f"{contact.name.value.capitalize()}'s birthday is not available"
             return f"{contact.name.value.capitalize()} birthday is on {contact.birthday}"
         except ValueError as e:
