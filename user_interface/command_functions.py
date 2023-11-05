@@ -1,5 +1,6 @@
 from colorama import Fore
 import copy
+
 from pathlib import Path
 from rich.table import Table
 
@@ -65,22 +66,10 @@ def find_phone(args, book):
 
 
 def show_all(book):
-    general_str = ""
-    for key, value in book.items():
-        pass
-        # if type(value) == list:
-        #     author_title = Fore.CYAN + f"\nAuthor:"
-        #     author_name = Fore.YELLOW + f"{key}"
-        #     author_notes = "".join([str(note) for note in value])
-        #     general_str += "{:}{:>10}{:^100}".format(
-        #         author_title, author_name, author_notes
-        #     )
-        # else:
     if book:
         return book.show_book()
     else:
         return "[i]...Book is empty...[/i]"
-    return general_str[:-1:]
 
 def delete_record(args, book):
     name = args[0]
@@ -461,3 +450,87 @@ def remove_note_tag(args, book):
         return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Note body deleted."
+
+def search_by_name(args, book):
+    if len(args) == 1:
+        name_prefix = args[0]
+        result = book.search_contacts_by_name(name_prefix)
+        return display_search_results(result)
+    else:
+        return "Invalid format. Please provide a single argument for the name search."
+        
+def search_by_phone(args, book):
+    if len(args) == 1:
+        phone_prefix = args[0]
+        result = book.search_contacts_by_phone(phone_prefix)
+        return display_search_results(result)
+    else:
+        return "Invalid format. Please provide a single argument for the phone search."    
+        
+def search_by_email(args, book):
+    if len(args) == 1:
+        email = args[0]
+        result = book.search_contacts_by_email(email)
+        return display_search_results(result)
+    else:
+        return "Invalid format. Please provide a single argument for the email search."    
+
+
+def remove_phone(args, book):
+    if len(args) == 1:
+        name = args[0]
+        try:
+            contact = book.find(name)
+            if contact:
+                print(Fore.CYAN + f"Contact information for {contact.name}:")
+                search_results = {contact.name: contact}
+                result = display_search_results(search_results)
+    
+                print(result)
+                
+                phone_to_remove = input("Please enter the phone number to be removed (n-close): ")
+                if phone_to_remove == "n":
+                    return Fore.YELLOW + "No changes made."
+                if phone_to_remove:
+                    phone_numbers = [phone.value for phone in contact.phones]
+                    if phone_to_remove in phone_numbers:
+                        contact.remove_phone(phone_to_remove)
+                        print(Fore.GREEN + 'Phone number removed.')
+                    else:
+                        print(Fore.RED + 'Such phone number wasn\'t found.')
+                else:
+                    print(Fore.YELLOW + 'No changes made.')
+            else:
+                print(Fore.RED + 'Contact not found.')
+        except ValueError as e:
+            print(Fore.RED + str(e))
+    else:
+        print(
+            Fore.RED
+            + "Invalid format. The 'remove-phone' command should be in the format: remove-phone [name]"
+        )
+
+
+
+
+def display_search_results(results):
+    if isinstance(results, str):
+        return results
+    else:
+        table = Table(title="Search Results", style="blue", show_lines=True)
+        table.add_column("Contact name", justify="center", style="green", min_width=20, no_wrap=True)
+        table.add_column("Phones", style="yellow", justify="center", max_width=35, no_wrap=False)
+        table.add_column("Email", justify="center", min_width=20, style="yellow")
+        table.add_column("Birthday", justify="center", min_width=20, style="yellow")
+        table.add_column("Address", justify="center", min_width=20, style="green")
+
+        for key, record in results.items():
+            phone_txt = "----" if record.phones is None else "; ".join(phone.value for phone in record.phones)
+            email_txt = "----" if record.email is None else record.email.email
+            birthday_txt = "----" if record.birthday is None else str(record.birthday)
+            address_txt = "----" if record.address is None else record.address.address
+            table.add_row(record.name.value.capitalize(), phone_txt, email_txt, birthday_txt, address_txt)
+            
+        console = Console()
+        console.print(table)
+        return ""
