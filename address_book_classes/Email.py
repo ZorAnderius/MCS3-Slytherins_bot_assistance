@@ -13,15 +13,14 @@ class Email:
         return self.__email
     
     @email.setter
-    def set_email(self, email):
+    def email(self, email):
         if self.validate_email(email):
             self.__email = email
         else:
-            self.__email = email
             raise ValueError("Invalid email address")
 
     def validate_email(self, email):
-        email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        email_pattern = r"^[a-zA-Z0-9_.+-]{3,}@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,}$"
         return re.match(email_pattern, email) is not None
 
     @staticmethod
@@ -61,21 +60,27 @@ class Email:
     def delete_email(contacts, email):
         contacts[:] = [contact for contact in contacts if contact.email != email]
 
+    @staticmethod
+    def delete_email_by_name(contacts, name):
+        for contact in contacts:
+            if contact.name == name:
+                contact.email = None
+
 class Contact:
-    def __init__(self, email):
+    def __init__(self, name, email):
+        self.name = name
         self.email = email
 
-        
 if __name__ == "__main__":
-    contacts = [Contact("example1@example.com"), Contact("example2@example.com")]
+    contacts = [Contact("John", "john@example.com"), Contact("Alice", "alice@example.com")]
 
-    search_results = Email.search_contacts(contacts, 'exa')
+    search_results = Email.search_contacts(contacts, 'example')
     print("Search Results:", search_results)
 
     suggested_emails = Email.suggest_variants(contacts, 'exa')
     print("Suggested Emails:", suggested_emails)
 
-    Email.edit_email(contacts, 'example1@example.com', 'new@example.com')
+    Email.edit_email(contacts, 'john@example.com', 'new@example.com')
     print("Updated Contacts:")
     for contact in contacts:
         print(contact.email)
@@ -84,3 +89,8 @@ if __name__ == "__main__":
     print("Contacts After Deletion:")
     for contact in contacts:
         print(contact.email)
+
+    Email.delete_email_by_name(contacts, 'Alice')
+    print("Contacts After Deletion by Name:")
+    for contact in contacts:
+        print(f"Name: {contact.name}, Email: {contact.email}")
