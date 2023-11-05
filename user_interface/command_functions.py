@@ -38,7 +38,7 @@ def add_phone(args, book):
         except ValueError as e:
             return Fore.RED + str(e)
     else:
-        return Fore.RED + "Invalid format. To add phone use next command - [add-phone name]"
+        return Fore.RED + "Invalid format. To add phone use next spell- [add-phone name]"
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Phone added."
 
@@ -53,14 +53,14 @@ def change_phone(args, book):
             while True:
                 try:
                     if not old_phone:
-                        old_phone = input(Fore.BLUE + "Enter old phone (n-close): ")
+                        old_phone = input(Fore.BLUE + "Say old phone (n-close): ")
                     if old_phone == 'n':
                         return Fore.YELLOW + "Phone didn't change"
                     if not list(filter(lambda phone: phone.value == old_phone,contact.phones)):
                         old_phone = None
                         print(Fore.YELLOW + "Phone does not exist")
                         continue
-                    new_phone = input(Fore.BLUE + "Enter new phone (n-close): ")
+                    new_phone = input(Fore.BLUE + "Say new phone (n-close): ")
                     if new_phone == 'n':
                         return Fore.YELLOW + "Phone didn't change"
                     if new_phone == old_phone or list(filter(lambda phone: phone.value == new_phone, contact.phones)):
@@ -77,7 +77,7 @@ def change_phone(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. To change phone use next command - [change-phone name]"
+            + "Invalid format. To change phone use next spell - [change-phone name]"
         )
     book.save_to_file(book_path)
     return Fore.GREEN + "Phone changed."
@@ -93,7 +93,7 @@ def find_phone(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. Command format - [phone phone]"
+            + "Invalid format. Spell format - [phone phone]"
         )
 
 
@@ -119,7 +119,7 @@ def delete_record(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. Command format - [delete-contact name]"
+            + "Invalid format. Spell format - [delete-contact name]"
         )
     
 def add_email(args, book):
@@ -132,7 +132,7 @@ def add_email(args, book):
             new_email = ""
             while True:
                 try:
-                    new_email = input(Fore.BLUE + "Enter new email (n-close): ")
+                    new_email = input(Fore.BLUE + "Say new email (n-close): ")
                     if new_email == "n":
                         return Fore.YELLOW + "No changes saved."
                     if new_email and type(new_email) is str:
@@ -147,7 +147,7 @@ def add_email(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. Command format - [add-address name]"
+            + "Invalid format. Spell format - [add-address name]"
         )
     book.save_to_file(book_path)
     return Fore.GREEN + "Email added."
@@ -160,7 +160,7 @@ def change_email(args,book):
             new_email = ""
             while True:
                 try:
-                    new_email = input(Fore.BLUE + "Enter new email (n-close): ")
+                    new_email = input(Fore.BLUE + "Say new email (n-close): ")
                     if new_email == "n":
                         return Fore.YELLOW + "No changes saved."
                     if new_email and type(new_email) is str:
@@ -175,7 +175,7 @@ def change_email(args,book):
     else:
         return (
             Fore.RED
-            + "Invalid format.Command format - [change-email name]"
+            + "Invalid format. Spell format - [change-email name]"
         )
     book.save_to_file(book_path)
     return Fore.GREEN + "Email changed."
@@ -186,11 +186,11 @@ def add_address(args, book):
         try:
             contact = book.find(name)
             if contact and contact.address:
-                return Fore.YELLOW + "Address already exists. Please use change address."
+                return Fore.YELLOW + "Address already exists. Please use change address spell."
             new_address = ""
             while True:
                 try:
-                    new_address = input(Fore.BLUE + "Enter new address (n-close): ")
+                    new_address = input(Fore.BLUE + "Say new address (n-close): ")
                     if new_address == "n":
                         return Fore.YELLOW + "No changes saved."
                     if new_address and type(new_address) is str:
@@ -205,7 +205,7 @@ def add_address(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. Command format - [add-address name]"
+            + "Invalid format. Spell format - [add-address name]"
         )
     book.save_to_file(book_path)
     return Fore.GREEN + "Address added."
@@ -218,7 +218,7 @@ def change_address(args, book):
             new_address = ""
             while True:
                 try:
-                    new_address = input(Fore.BLUE + "Enter new address (n-close): ")
+                    new_address = input(Fore.BLUE + "Say new address (n-close): ")
                     if new_address == "n":
                         return Fore.YELLOW + "No changes saved."
                     if new_address and type(new_address) is str:
@@ -233,7 +233,7 @@ def change_address(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. Command format - [change-address name]"
+            + "Invalid format. Spell format - [change-address name]"
         )
     book.save_to_file(book_path)
     return Fore.GREEN + "Address changed."
@@ -245,7 +245,7 @@ def add_birthday(args, book):
             contact = book.find(name)
             contact.input_birthday()
             if not contact.birthday:
-                return Fore.YELLOW + "Birthday didn't save"
+                return Fore.YELLOW + "Birthday didn't save. Dark Lord will be unhappy"
         except ValueError as e:
             return Fore.RED + str(e)
         book.save_to_file(book_path)
@@ -253,7 +253,7 @@ def add_birthday(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. Command format - [add-birthday name]"
+            + "Invalid format. Spell format - [add-birthday name]"
         )
 
 
@@ -263,14 +263,14 @@ def show_birthday(args, book):
         try:
             contact = book.find(name)
             if contact and not contact.birthday:
-                return f"{contact.name.value.capitalize()}'s birthday is not available"
+                return f"{contact.name.value.capitalize()}'s birthday is not available."
             return f"{contact.name.value.capitalize()} birthday is on {contact.birthday}"
         except ValueError as e:
             return Fore.RED + str(e)
     else:
         return (
             Fore.RED
-            + "Invalid format. Command format - [show-birthday name]"
+            + "Invalid format. Spell format - [show-birthday name]"
         )
 
 
@@ -284,9 +284,9 @@ def show_all_birthdays(args, book):
         except ValueError as e:
             return f'[i]{str(e)}[/i]'
         except IndexError:
-            return Fore.RED + "Missing arguments. Command format - [birthday days]"
+            return Fore.RED + "Missing arguments. Spell format - [birthday days]"
     else:
-        return "[i]Invalid format. Command format - birthdays day[/i]"
+        return "[i]Invalid format. Spell format - birthdays day[/i]"
     
     return birthday_book.show_book()
 
@@ -312,7 +312,7 @@ def find_note(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. Command format - [search-tag tag]"
+            + "Invalid format. Spell format - [search-tag tag]"
         )
     
 def search_by_tag(args, book):
@@ -321,7 +321,7 @@ def search_by_tag(args, book):
         filter_book = book.search_by_tag(tag)
         return filter_book.show_book()
     else:
-        return ("[i]Invalid format. Command format - [search-tag tag][/i]")
+        return ("[i]Invalid format. Spell format - [search-tag tag][/i]")
     
 def search_by_author(args, book):
     if len(args) == 1:
@@ -329,7 +329,7 @@ def search_by_author(args, book):
         filter_book = book.search_by_author(tag)
         return filter_book.show_book()
     else:
-        return ("[i]Invalid format. Command format - [search-author author][/i]")
+        return ("[i]Invalid format. Spell format - [search-author author][/i]")
     
 def search_by_title(args, book):
     if len(args) == 1:
@@ -337,7 +337,7 @@ def search_by_title(args, book):
         filter_book = book.search_by_title(tag)
         return filter_book.show_book()
     else:
-        return ("[i]Invalid format. Command format - [search-title title][/i]")
+        return ("[i]Invalid format. Spell format - [search-title title][/i]")
     
 def sort_notes(book):
     return book.sort_notes().show_book()
@@ -358,7 +358,7 @@ def add_note(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. Command format - [add-note author]"
+            + "Invalid format. Spell format - [add-note author]"
         )
     return Fore.GREEN + "Note added."
 
@@ -371,7 +371,7 @@ def add_tag(args, book):
         except ValueError as e:
             return Fore.RED + str(e)
     else:
-        return Fore.RED + "Invalid format. Must be 3 arguments: name, title, new_tag"
+        return Fore.RED + "Invalid format. Spell format - [add-tag author]"
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Tag updated."
 
@@ -381,9 +381,9 @@ def change_note_title(args, book):
         try:
             note = book.find_all_notes(author)[0]
             while True:
-                new_title = input(Fore.BLUE + "Enter new title (n-close): ")
+                new_title = input(Fore.BLUE + "Say new title (n-close): ")
                 if new_title == "n":
-                    return Fore.YELLOW + "No changes saved."
+                    return Fore.YELLOW + "No changes saved. Nagini is hungry "
                 if new_title and type(new_title) is str:
                     break
                 else:
@@ -401,7 +401,7 @@ def change_note_title(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. Missing one of the arguments: name, old_title or new_title"
+            + "Invalid format. Spell format - [change-title author]"
         )
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Title changed."
@@ -415,14 +415,14 @@ def change_note_body(args, book):
         while True:
             try:
                 if not title:
-                    title = input(Fore.BLUE + "Enter title (n-close):")
+                    title = input(Fore.BLUE + "Say title (n-close):")
                 if title == "n":
                     return Fore.YELLOW + "No changes saved."
                 if title:
                     note = book.find_note(author,title)
                 if note is None:
                     raise ValueError(Fore.RED + "Invalid title")
-                body = input(Fore.BLUE + "Enter note (n-close): ")
+                body = input(Fore.BLUE + "Say note (n-close): ")
                 if body == "n":
                     return Fore.YELLOW + "No changes saved."
                 if body and type(body) is str and note:
@@ -435,7 +435,7 @@ def change_note_body(args, book):
                 title = None
                 continue
     else:
-        return Fore.RED + "Invalid format. To change note body use next command - [change-body name]"
+        return Fore.RED + "Invalid format. To change note body use next spell - [change-body name]"
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Note changed."
 
@@ -448,7 +448,7 @@ def change_note_tag(args, book):
         while True:
             try:
                 if not title:
-                    title = input(Fore.BLUE + "Enter title (n-close):")
+                    title = input(Fore.BLUE + "Say title (n-close):")
                 if title == "n":
                         return Fore.YELLOW + "No changes saved."
                 if title:
@@ -456,7 +456,7 @@ def change_note_tag(args, book):
                 if note is None:
                     raise ValueError(Fore.RED + "Invalid title")
                 if not old_tag:
-                    old_tag = input(Fore.BLUE + "Enter old tag (n-close):")
+                    old_tag = input(Fore.BLUE + "Say old tag (n-close):")
                 if old_tag == "n":
                         return Fore.YELLOW + "No changes saved."
                 if not (list(filter(lambda x: x.tag == old_tag, note.tags))):
@@ -464,7 +464,7 @@ def change_note_tag(args, book):
                     print(Fore.RED + "Wrong tag. Try again")
                     continue
             
-                new_tag = input(Fore.BLUE + "Enter new tag (n-close): ")
+                new_tag = input(Fore.BLUE + "Say new tag (n-close): ")
                 if new_tag == "n":
                     return Fore.YELLOW + "No changes saved."
                 if old_tag and new_tag and type(new_tag) == str and note:
@@ -481,7 +481,7 @@ def change_note_tag(args, book):
     else:
         return (
             Fore.RED
-            + "Invalid format. To change tag use next command - [change-tag name]"
+            + "Invalid format. To change tag use next spell - [change-tag name]"
         )
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Tag changed."
@@ -494,14 +494,14 @@ def delete_notes(args, book):
             if note:
                 book.delete(author)  
                 book.save_to_file(notebook_path)
-                return Fore.GREEN + 'Notes deleted.'
+                return Fore.GREEN + 'Notes deleted. Harry Potter is happy'
             else:
                 return Fore.RED + 'Notes not found.'
         except ValueError as e:
             return Fore.RED + str(e)
     return (
             Fore.RED
-            + "Invalid format. To delete note use next command - [delete-note author]"
+            + "Invalid format. To delete note use next spell - [delete-note author]"
         )
 
 def remove_note(args, book):
@@ -509,7 +509,7 @@ def remove_note(args, book):
         author = args[0]
         while True:
             try:
-                title = input(Fore.BLUE + "Enter title (n-close):")
+                title = input(Fore.BLUE + "Say title (n-close):")
                 if title == "n":
                         return Fore.YELLOW + "No changes saved."
                 if title:
@@ -518,7 +518,7 @@ def remove_note(args, book):
             except ValueError as e:
                 print(Fore.RED + str(e))
     else:
-        return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+        return Fore.RED + "Invalid format. Spell format - [remove-note author]"
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Note deleted."
 
@@ -528,7 +528,7 @@ def remove_note_body(args, book):
         author = args[0]
         while True:
             try:
-                title = input(Fore.BLUE + "Enter title (n-close):")
+                title = input(Fore.BLUE + "Say title (n-close):")
                 if title == "n":
                         return Fore.YELLOW + "No changes saved."
                 if title:
@@ -536,11 +536,11 @@ def remove_note_body(args, book):
                     if note:
                         note.remove_body()
                         break
-                    print(Fore.RED + "Wrong title")
+                    print(Fore.RED + "Wrong title.Haven't received Crucio in a long time?")
             except ValueError as e:
                 return Fore.RED + str(e)
     else:
-        return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+        return Fore.RED + "Invalid format. Spell format - [remove-body author]"
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Note body deleted."
 
@@ -555,7 +555,7 @@ def remove_note_tag(args, book):
         while True:
             try:
                 if not title:
-                    title = input(Fore.BLUE + "Enter title (n-close):")
+                    title = input(Fore.BLUE + "Say title (n-close):")
                 if title == "n":
                         return Fore.YELLOW + "No changes saved."
                 if title:
@@ -564,13 +564,13 @@ def remove_note_tag(args, book):
                     raise ValueError("Wrong title")
                     
                 if not tag:
-                    tag = input(Fore.BLUE + "Enter old tag (n-close):")
+                    tag = input(Fore.BLUE + "Say old tag (n-close):")
                 if tag == "n":
                         return Fore.YELLOW + "No changes saved."
                 
                 if not (list(filter(lambda x: x.tag == tag, note.tags))):
                     tag = None
-                    print(Fore.RED + "Wrong tag. Try again")
+                    print(Fore.RED + "Wrong tag. Try again muggle!")
                     continue
                 
                 if note and tag:
@@ -580,9 +580,9 @@ def remove_note_tag(args, book):
                 title = None
                 print(Fore.RED + str(e))
     else:
-        return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
+        return Fore.RED + "Invalid format. Spell format - [remove-tag author]"
     book.save_to_file(notebook_path)
-    return Fore.GREEN + f"Tag{tag} deleted."
+    return Fore.GREEN + f"Tag deleted."
 
 def search_by_name(args, book):
     if len(args) == 1:
@@ -622,7 +622,7 @@ def remove_phone(args, book):
             contact = book.find(name)
             if contact:
                 while True:
-                    phone_to_remove = input("Enter phone number (n-close): ")
+                    phone_to_remove = input("Say phone number (n-close): ")
                     if phone_to_remove == "n":
                         return Fore.YELLOW + "No changes made."
                     
@@ -640,5 +640,5 @@ def remove_phone(args, book):
         except ValueError as e:
             return Fore.RED + str(e)
     else:
-        return Fore.RED + "Invalid format. The 'remove-phone' command should be in the format: remove-phone [name]"
+        return Fore.RED + "Invalid format. Spell format: [remove-phone name]"
         

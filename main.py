@@ -1,6 +1,7 @@
 from colorama import Fore
 from pathlib import Path
 import os.path
+import sys
 from rich.console import Console
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
@@ -10,10 +11,11 @@ from notes_classes.NoteBook import NoteBook
 from user_interface.command_functions import *
 from user_interface.parse_input import parse_input
 
+book_path = Path("address_book.json")
+notebook_path = Path("note_book.json")
+
 
 def main():
-    book_path = Path("address_book.json")
-    notebook_path = Path("note_book.json")
     book = AddressBook()
     notebook = NoteBook()
     console = Console()
@@ -29,7 +31,7 @@ def main():
             notebook = notebook.add_book(new_notebook)
 
     while True:
-        user_input = prompt(Fore.CYAN + "Enter a command: ", completer=command_completer())
+        user_input = prompt("Say the spell: ", completer=command_completer(),)
         if user_input:
             command, *args = parse_input(user_input)
 
@@ -53,7 +55,9 @@ def command_completer():
     "remove-phone",
     "add-birthday",
     "show-birthday",
-    "birthdays"
+    "birthdays",
+    'close',
+    'exit'
     ]
     notebook_commands = [
     "add-note",
@@ -145,7 +149,7 @@ def handle_command(command, args, book, notebook, console, book_path, notebook_p
     elif command == "all-notes": 
         console.print(show_all(notebook))
     else:
-        print(Fore.YELLOW + "Invalid command")
+        print(Fore.YELLOW + "Invalid spall")
 
     book.save_to_file(book_path)
     notebook.save_to_file(notebook_path)
