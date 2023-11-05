@@ -26,6 +26,8 @@ def add_contact(args, book):
             book.add_record(record)
         except ValueError as e:
             return Fore.RED + str(e)
+    else:
+        return Fore.RED + "Invalid format. To add phone use next spell- [add-contact name]"
     book.save_to_file(book_path)
     return Fore.GREEN + "Contact added."
 

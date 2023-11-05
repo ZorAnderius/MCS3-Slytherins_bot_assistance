@@ -34,7 +34,6 @@ def main():
         user_input = prompt("Say the spell: ", completer=command_completer(),)
         if user_input:
             command, *args = parse_input(user_input)
-
             handle_command(command, args, book, notebook, console, book_path, notebook_path)
 
 def command_completer():
@@ -149,7 +148,7 @@ def handle_command(command, args, book, notebook, console, book_path, notebook_p
     elif command == "all-notes": 
         console.print(show_all(notebook))
     else:
-        print(Fore.YELLOW + "Invalid spall")
+        print(Fore.YELLOW + "Invalid spell")
 
     book.save_to_file(book_path)
     notebook.save_to_file(notebook_path)
