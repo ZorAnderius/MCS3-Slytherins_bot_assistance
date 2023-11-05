@@ -194,12 +194,9 @@ class NoteBook(UserDict):
                         temp_dict[len(str_syb_tags)] = [note]
         if  temp_dict:
             sort_key = sorted(temp_dict.keys())
-            
-            print(sort_key)
             sorted_dict = NoteBook()
             for key in sort_key:
                 sorted_dict[key] = temp_dict[key]
-        
             return sorted_dict
         else:
             return "[i]...NoteNook is empty...[/i]"
