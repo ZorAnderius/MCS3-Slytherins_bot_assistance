@@ -77,6 +77,20 @@ class Note:
     def id(self):
         return self.__id
     
+    def __le__(self, other):
+        return len(self.__tags) <= len(other.__tags)
+    
+    
+    def __ge__(self, other):
+        return len(self.__tags) >= len(other.__tags)
+    
+    def __lt__(self, other):
+        return len(self.__tags) < len(other.__tags)
+    
+    
+    def __gt__(self, other):
+        return len(self.__tags) > len(other.__tags)
+    
     def serialize(self):
         return {
             "author": self.author.serialize() if self.author else None,
@@ -160,6 +174,11 @@ class Note:
     def find_tag(self, tag: str) -> str or None:
         if list(filter(lambda p: p.tag == tag, self.tags)):
             return tag
+        
+    def search_by_tag(self, tag):
+        if tag in self.tags:
+            return self
+
 
     def remove_body(self):
         self.__body = None
@@ -184,7 +203,7 @@ class Note:
             copy.deepcopy(self.author),
             copy.deepcopy(self.title),
             copy.deepcopy(self.body),
-            copy.deepcopy(self.tags),
+            [copy.deepcopy(tag) for tag in self.tags],
         )
         memo[id(copy_obj)] = copy_obj
         return copy_obj
