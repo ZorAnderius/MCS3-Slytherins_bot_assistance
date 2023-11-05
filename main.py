@@ -33,71 +33,67 @@ def main():
                 break
             elif command == "hello":
                 print(Fore.BLUE + "How can I help you?")
-            elif command == "add-contact":
-                print(added_contact(args, book))
-            elif command == "change-contact":
-                print(change_contact(args, book))
-            elif command == "add-email":
+            elif command == "add-contact": #1
+                print(add_contact(args, book))
+            elif command == "add-phone": #1
+                print(add_phone(args, book))
+            elif command == "change-phone":#1
+                print(change_phone(args, book))
+            elif command == "add-email":#1
                 print(add_email(args, book))
-            elif command == "change-email":
+            elif command == "change-email":#1
                 print(change_email(args, book))
-            elif command == "add-address":
+            elif command == "add-address":#1
                 print(add_address(args, book))
-            elif command == "change-address":
+            elif command == "change-address": #11111
                 print(change_address(args, book))
             elif command == "phone":
                 print(find_phone(args, book)[:-1:])
-            elif command == "all-contacts":
+            elif command == "all-contacts": #1
                 console.print(show_all(book))
-            elif command == 'delete-record':
+            elif command == 'delete-contact': #1
                 print (delete_record(args, book))
-            elif command == "search-by-name":
-                result = search_by_name(args, book)
-                if result is not None:
-                    console.print(result)
-            elif command == "search-by-phone":
-                result = search_by_phone(args, book)
-                if result is not None:
-                    console.print(result)
-            elif command == "search-by-email":
-                result = search_by_email(args, book)
-                if result is not None:
-                    console.print(result)
-            elif command == "remove-phone":
-                remove_phone(args, book)
-            elif command == "add-birthday":
+            elif command == "search-name": #1
+                console.print(search_by_name(args, book))
+            elif command == "search-phone": #1
+                console.print(search_by_phone(args, book))
+            elif command == "search-email": #1
+                console.print(search_by_email(args, book))
+            elif command == "remove-phone": #1
+                print(remove_phone(args, book))
+            elif command == "add-birthday": #1
                 print(add_birthday(args, book))
-            elif command == "show-birthday":
+            elif command == "show-birthday": #1
                 print(show_birthday(args, book))
-            elif command == "birthdays":
-                print(show_all_birthdays(args, book))
-            elif command == "add-note":
+            elif command == "birthdays": #1
+                console.print(show_all_birthdays(args, book))
+            elif command == "add-note": #1
                 print(add_note(args, notebook))
-            elif command == "add-tag":
+            elif command == "add-tag": #11111
                 print(add_tag(args, notebook))
-            elif command == "change-title":
+            elif command == "change-title": #1
                 print(change_note_title(args, notebook))
-            elif command == "change-body":
+            elif command == "change-body": 
                 print(change_note_body(args, notebook))
-            elif command == "change-tag":
+            elif command == "change-tag": #помилка при неправильних значеннях
                 print(change_note_tag(args, notebook))
-            elif command == "delete-notes":
+            elif command == "delete-notes": #1
                 print(delete_notes(args, notebook))
-            elif command == "remove-note":
+            elif command == "remove-note":  #помилка при неправильних значеннях
                 print(remove_note(args, notebook))
-            elif command == "remove-body":
+            elif command == "remove-body": #помилка при неправильних значеннях
                 print(remove_note_body(args, notebook))
-            elif command == "remove-tag":
+            elif command == "remove-tag": #помилка при неправильних значеннях
                 print(remove_note_tag(args, notebook))
-            elif command == "search-tag":
+            elif command == "search-tag": #1
                 console.print(search_by_tag(args, notebook))
-            elif command == "search-author":
+            elif command == "search-author":#1
                 console.print(search_by_author(args, notebook))
-            elif command == "search-title":
+            elif command == "search-title": #1
                 console.print(search_by_title(args, notebook))
-            elif command == "sort-notes":
+            elif command == "sort-notes":#1
                 console.print(sort_notes(notebook))
-            elif command == "all-notes":
+            elif command == "all-notes": #1
                 console.print(show_all(notebook))
             else:
                 print(Fore.YELLOW + "Invalid command")

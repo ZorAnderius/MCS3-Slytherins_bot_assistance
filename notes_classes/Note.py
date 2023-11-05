@@ -179,7 +179,6 @@ class Note:
         if tag in self.tags:
             return self
 
-
     def remove_body(self):
         self.__body = None
 
@@ -194,7 +193,6 @@ class Note:
             copy.copy(self.author),
             copy.copy(self.title),
             copy.copy(self.body),
-            [copy.copy(tag) for tag in self.tags],
         )
         return note_copy
 
@@ -203,7 +201,6 @@ class Note:
             copy.deepcopy(self.author),
             copy.deepcopy(self.title),
             copy.deepcopy(self.body),
-            [copy.deepcopy(tag) for tag in self.tags],
         )
         memo[id(copy_obj)] = copy_obj
         return copy_obj

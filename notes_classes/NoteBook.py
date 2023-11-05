@@ -2,7 +2,7 @@ from collections import UserDict
 from colorama import Fore
 import json
 from rich.table import Table
-import copy
+import re
 
 from .Title import Title
 from .Note import Note
@@ -114,21 +114,25 @@ class NoteBook(UserDict):
 
     def find_note(self, name, title):
         notes = self.find_all_notes(name)
-        return list(filter(lambda note: note.title.title.lower() == title.lower(), notes))[0]
+        if notes and type(notes) is list:
+            return list(filter(lambda note: note.title.title.lower() == title.lower(), notes))[0]
     
     def search_by_title(self, title):
-        filter_book = NoteBook()
-        for _, notes in self.data.items():
-            for note in notes:
-                if note.title.title.lower() == title.lower():
-                    filter_book.add_note(note)
-        return filter_book
+        if title and type(title) is str:
+            if len(title) <= 2:
+                return "[i]At least two characters are required for search[/i]"
+            filter_book = NoteBook()
+            for _, notes in self.data.items():
+                for note in notes:
+                    if re.findall(title, note.title.title, re.IGNORECASE):
+                        filter_book.add_note(note)
+            return filter_book
     
     def search_by_author(self, author):
         filter_book = NoteBook()
         for _, notes in self.data.items():
             for note in notes:
-                if note.author.value.lower() == author.lower():
+                if re.findall(author, note.author.value, re.IGNORECASE):
                     filter_book.add_note(note)
         return filter_book
     
@@ -136,7 +140,7 @@ class NoteBook(UserDict):
         filter_book = NoteBook()
         for _, notes in self.data.items():
             for note in notes:
-                if list(filter(lambda note_tag: note_tag.tag.lower() == tag.lower(), note.tags)):
+                if list(filter(lambda note_tag: re.findall(tag, note_tag.tag, re.IGNORECASE), note.tags)):
                     filter_book.add_note(note)
         return filter_book
     
