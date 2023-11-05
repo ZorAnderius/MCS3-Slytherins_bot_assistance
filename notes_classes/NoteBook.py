@@ -2,6 +2,7 @@ from collections import UserDict
 from colorama import Fore
 import json
 from rich.table import Table
+import copy
 
 from .Title import Title
 from .Note import Note
@@ -40,7 +41,7 @@ class NoteBook(UserDict):
                         new_note.add_body(body)
                     if created_at:
                         new_note.add_created_at(created_at)    
-                if not self.data:                    
+                if not self.data or not author in self.data:                    
                     self.data[author] = [new_note]
                 else:
                     self.data[author].append(new_note)
@@ -83,15 +84,15 @@ class NoteBook(UserDict):
         table.add_column("Title", style="yellow", justify="center", max_width=35, no_wrap=False)
         table.add_column("Note", justify="center",min_width=20, style="yellow")
         table.add_column("Tags", justify="center",min_width=20, style="yellow")
-        table.add_column("Created at", justify="center",min_width=20, style="grey0")
+        table.add_column("Created at", justify="center", style="grey0", width=30)
         
         for key, notes in self.data.items():  
             for note in notes:
-                tags_txt = "----" if note.tags is None else "; ".join(tag.tag for tag in note.tags)
+                tags_txt = "----" if note.tags is None or len(note.tags) == 0 else "; ".join(tag.tag for tag in note.tags)
                 title_txt = "----" if note.title is None else note.title.title
                 body_txt = "----" if note.body is None else note.body.body
                 created_at_txt = "----" if note.created_at is None else note.created_at
-                table.add_row(key.capitalize(),  title_txt, body_txt, tags_txt, created_at_txt)
+                table.add_row(note.author.value.capitalize(),  title_txt, body_txt, tags_txt, created_at_txt)
         return table
 
     def add_note(self, note):
@@ -114,6 +115,30 @@ class NoteBook(UserDict):
     def find_note(self, name, title):
         notes = self.find_all_notes(name)
         return list(filter(lambda note: note.title.title.lower() == title.lower(), notes))[0]
+    
+    def search_by_title(self, title):
+        filter_book = NoteBook()
+        for _, notes in self.data.items():
+            for note in notes:
+                if note.title.title.lower() == title.lower():
+                    filter_book.add_note(note)
+        return filter_book
+    
+    def search_by_author(self, author):
+        filter_book = NoteBook()
+        for _, notes in self.data.items():
+            for note in notes:
+                if note.author.value.lower() == author.lower():
+                    filter_book.add_note(note)
+        return filter_book
+    
+    def search_by_tag(self, tag):
+        filter_book = NoteBook()
+        for _, notes in self.data.items():
+            for note in notes:
+                if list(filter(lambda note_tag: note_tag.tag.lower() == tag.lower(), note.tags)):
+                    filter_book.add_note(note)
+        return filter_book
     
     def remove_note(self, author, title):
         if author in self.data:
@@ -155,6 +180,29 @@ class NoteBook(UserDict):
                                 Fore.YELLOW
                                 + f"Note with {new_note.title.upper()} title is already exist"
                             )
+                            
+    def sort_notes(self):
+        temp_dict = NoteBook()
+        if len(self.data):
+            for key, notes in self.data.items():
+                for note in notes:
+                    str_syb_tags = "".join(tag.tag for tag in note.tags)
+                        
+                    if len(str_syb_tags) in temp_dict:
+                        temp_dict[len(str_syb_tags)].append(note)
+                    else: 
+                        temp_dict[len(str_syb_tags)] = [note]
+        if  temp_dict:
+            sort_key = sorted(temp_dict.keys())
+            
+            print(sort_key)
+            sorted_dict = NoteBook()
+            for key in sort_key:
+                sorted_dict[key] = temp_dict[key]
+        
+            return sorted_dict
+        else:
+            return "[i]...NoteNook is empty...[/i]"
 
     def __repr__(self):
         string = ""

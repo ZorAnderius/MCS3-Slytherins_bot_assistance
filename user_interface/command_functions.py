@@ -266,6 +266,33 @@ def find_note(args, book):
         return book.find(name, title)
     except ValueError as e:
         return Fore.RED + str(e)
+    
+def search_by_tag(args, book):
+    if len(args) == 1:
+        tag = args[0]
+        filter_book = book.search_by_tag(tag)
+        return filter_book.show_book()
+    else:
+        return "[i]Invalid command[/i]"
+    
+def search_by_author(args, book):
+    if len(args) == 1:
+        tag = args[0]
+        filter_book = book.search_by_author(tag)
+        return filter_book.show_book()
+    else:
+        return "[i]Invalid command[/i]"
+    
+def search_by_title(args, book):
+    if len(args) == 1:
+        tag = args[0]
+        filter_book = book.search_by_title(tag)
+        return filter_book.show_book()
+    else:
+        return "[i]Invalid command[/i]"
+    
+def sort_notes(book):
+    return book.sort_notes().show_book()
 
 
 def add_note(args, book):
