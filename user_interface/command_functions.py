@@ -244,6 +244,8 @@ def add_birthday(args, book):
         try:
             contact = book.find(name)
             contact.input_birthday()
+            if not contact.birthday:
+                return Fore.YELLOW + "Birthday didn't save"
         except ValueError as e:
             return Fore.RED + str(e)
         book.save_to_file(book_path)
@@ -340,7 +342,6 @@ def search_by_title(args, book):
 def sort_notes(book):
     return book.sort_notes().show_book()
 
-
 def add_note(args, book):
     if len(args) == 1:
         try:
@@ -361,12 +362,11 @@ def add_note(args, book):
         )
     return Fore.GREEN + "Note added."
 
-
 def add_tag(args, book):
     if len(args) == 1:
         author = args[0]
         try:
-            note = book.find_all_notes(author)
+            note = book.find_all_notes(author)[0]
             note.input_tag()
         except ValueError as e:
             return Fore.RED + str(e)
@@ -374,7 +374,6 @@ def add_tag(args, book):
         return Fore.RED + "Invalid format. Must be 3 arguments: name, title, new_tag"
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Tag updated."
-
 
 def change_note_title(args, book):
     if len(args) == 1:
@@ -407,7 +406,6 @@ def change_note_title(args, book):
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Title changed."
 
-
 def change_note_body(args, book):
     if len(args) == 1:
         author = args[0]
@@ -422,6 +420,8 @@ def change_note_body(args, book):
                     return Fore.YELLOW + "No changes saved."
                 if title:
                     note = book.find_note(author,title)
+                if note is None:
+                    raise ValueError(Fore.RED + "Invalid title")
                 body = input(Fore.BLUE + "Enter note (n-close): ")
                 if body == "n":
                     return Fore.YELLOW + "No changes saved."
@@ -439,7 +439,6 @@ def change_note_body(args, book):
     book.save_to_file(notebook_path)
     return Fore.GREEN + "Note changed."
 
-
 def change_note_tag(args, book):
     if len(args) == 1:
         author= args[0]
@@ -454,12 +453,17 @@ def change_note_tag(args, book):
                         return Fore.YELLOW + "No changes saved."
                 if title:
                     note = book.find_note(author,title)
-                    
+                if note is None:
+                    raise ValueError(Fore.RED + "Invalid title")
                 if not old_tag:
                     old_tag = input(Fore.BLUE + "Enter old tag (n-close):")
                 if old_tag == "n":
                         return Fore.YELLOW + "No changes saved."
-                    
+                if not (list(filter(lambda x: x.tag == old_tag, note.tags))):
+                    old_tag = None
+                    print(Fore.RED + "Wrong tag. Try again")
+                    continue
+            
                 new_tag = input(Fore.BLUE + "Enter new tag (n-close): ")
                 if new_tag == "n":
                     return Fore.YELLOW + "No changes saved."
@@ -529,8 +533,10 @@ def remove_note_body(args, book):
                         return Fore.YELLOW + "No changes saved."
                 if title:
                     note = book.find_note(author, title)
-                    note.remove_body()
-                    break
+                    if note:
+                        note.remove_body()
+                        break
+                    print(Fore.RED + "Wrong title")
             except ValueError as e:
                 return Fore.RED + str(e)
     else:
@@ -544,30 +550,39 @@ def remove_note_tag(args, book):
         author= args[0]
         title = None
         tag = None
-        try:
-             while True:
+        note = None
+        
+        while True:
+            try:
                 if not title:
                     title = input(Fore.BLUE + "Enter title (n-close):")
                 if title == "n":
                         return Fore.YELLOW + "No changes saved."
                 if title:
                     note = book.find_note(author,title)
-                    
+                if not note:
+                    raise ValueError("Wrong title")
                     
                 if not tag:
                     tag = input(Fore.BLUE + "Enter old tag (n-close):")
                 if tag == "n":
                         return Fore.YELLOW + "No changes saved."
                 
+                if not (list(filter(lambda x: x.tag == tag, note.tags))):
+                    tag = None
+                    print(Fore.RED + "Wrong tag. Try again")
+                    continue
+                
                 if note and tag:
                     note.remove_tag(tag)
                     break
-        except ValueError as e:
-            return Fore.RED + str(e)
+            except ValueError as e:
+                title = None
+                print(Fore.RED + str(e))
     else:
         return Fore.RED + "Invalid format. Missing one of the parameters: name, title"
     book.save_to_file(notebook_path)
-    return Fore.GREEN + "Note body deleted."
+    return Fore.GREEN + f"Tag{tag} deleted."
 
 def search_by_name(args, book):
     if len(args) == 1:

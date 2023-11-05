@@ -45,9 +45,9 @@ def main():
                 print(change_email(args, book))
             elif command == "add-address":#1
                 print(add_address(args, book))
-            elif command == "change-address": #11111
+            elif command == "change-address": #1
                 print(change_address(args, book))
-            elif command == "phone":
+            elif command == "phone":#1
                 print(find_phone(args, book)[:-1:])
             elif command == "all-contacts": #1
                 console.print(show_all(book))
@@ -69,21 +69,21 @@ def main():
                 console.print(show_all_birthdays(args, book))
             elif command == "add-note": #1
                 print(add_note(args, notebook))
-            elif command == "add-tag": #11111
+            elif command == "add-tag": #1
                 print(add_tag(args, notebook))
             elif command == "change-title": #1
                 print(change_note_title(args, notebook))
-            elif command == "change-body": 
+            elif command == "change-body":#1 
                 print(change_note_body(args, notebook))
-            elif command == "change-tag": #помилка при неправильних значеннях
+            elif command == "change-tag": #1
                 print(change_note_tag(args, notebook))
             elif command == "delete-notes": #1
                 print(delete_notes(args, notebook))
-            elif command == "remove-note":  #помилка при неправильних значеннях
+            elif command == "remove-note":  #1
                 print(remove_note(args, notebook))
-            elif command == "remove-body": #помилка при неправильних значеннях
+            elif command == "remove-body": #1
                 print(remove_note_body(args, notebook))
-            elif command == "remove-tag": #помилка при неправильних значеннях
+            elif command == "remove-tag": #1
                 print(remove_note_tag(args, notebook))
             elif command == "search-tag": #1
                 console.print(search_by_tag(args, notebook))
