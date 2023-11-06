@@ -88,7 +88,7 @@ def handle_command(command, args, book, notebook, console, book_path, notebook_p
         notebook.save_to_file(notebook_path)
         sys.exit(0)
     elif command == "hi":
-        print(Fore.BLUE + "Hi! I am Voldebot! What kind of magic shall we do today? 🪄")
+        print(Fore.YELLOW + "Hi! I am Voldebot! What kind of magic shall we do today? 🪄")
     elif command == "add-contact":
         print(add_contact(args, book))
     elif command == "add-phone":
