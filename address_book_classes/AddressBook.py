@@ -54,7 +54,7 @@ class AddressBook(UserDict):
             if record.name.value in self.data:
                 raise ValueError(Fore.YELLOW + "Record is already exist")
             else:
-                self.data[record.name.value] = record
+                self.data[record.name.value.lower()] = record
         else:
             raise ValueError("Invalid record")
 
@@ -102,7 +102,7 @@ class AddressBook(UserDict):
 
 
     def show_book(self):
-        table = Table(title="AddressBook",style="blue", show_lines=True)
+        table = Table(title="The Diary of Tom Riddle(address book)",style="blue", show_lines=True)
 
         table.add_column("Contact name", justify="center", style="green",min_width=20, no_wrap=True)
         table.add_column("Phones", style="yellow", justify="center", max_width=35, no_wrap=False)

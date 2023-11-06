@@ -8,7 +8,7 @@ class Name(Field):
     def __init__(self, name: str):
         name = self.__formatted_name(name)
         if self.__is_valid(name):
-            self.__name = name
+            self.__name = name.lower()
         else:
             self.__name = None
             raise ValueError(f"{name} is invalid name")
