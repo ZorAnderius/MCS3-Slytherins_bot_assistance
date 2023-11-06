@@ -85,7 +85,7 @@ class NoteBook(UserDict):
         table.add_column("Title", style="yellow", justify="center", max_width=35, no_wrap=False)
         table.add_column("Note", justify="center",min_width=20, style="yellow")
         table.add_column("Tags", justify="center",min_width=20, style="yellow")
-        table.add_column("Created at", justify="center", style="grey0", width=30)
+        table.add_column("Created at", justify="center", style="blue", width=30)
         
         for key, notes in self.data.items():  
             for note in notes:
