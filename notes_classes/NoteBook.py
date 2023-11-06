@@ -78,7 +78,7 @@ class NoteBook(UserDict):
                 return res
             
     def show_book(self):
-        table = Table(title="NoteBook",style="blue", show_lines=True)
+        table = Table(title="The Diary of Tom Riddle",style="blue", show_lines=True)
 
         table.add_column("Author", justify="center", style="green",min_width=20, no_wrap=True)
         table.add_column("Title", style="yellow", justify="center", max_width=35, no_wrap=False)

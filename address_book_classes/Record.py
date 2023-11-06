@@ -176,7 +176,7 @@ class Record:
     def input_email(self):
         while True:
             try:
-                new_email = input(Fore.BLUE + "Enter email (n-close): ")
+                new_email = input(Fore.BLUE + "Say email (n-close): ")
                 if new_email == "n":
                     print(Fore.YELLOW + "Email didn't save")
                     break
@@ -189,7 +189,7 @@ class Record:
                 print(Fore.RED + str(e))
     
     def input_birthday(self):
-        print(Fore.BLUE + "Enter contact's birthday")
+        print(Fore.BLUE + "Say contact's birthday")
         err_mess= ''
         try:
             while True:
@@ -222,7 +222,7 @@ class Record:
     def input_address(self):
         while True:
             try:
-                new_address = input(Fore.BLUE + "Enter address (n-close): ")
+                new_address = input(Fore.BLUE + "Say address (n-close): ")
                 if new_address == "n":
                     print(Fore.YELLOW + "Address didn't save")
                 if new_address and type(new_address) is str:
