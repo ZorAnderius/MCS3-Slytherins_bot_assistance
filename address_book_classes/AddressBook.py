@@ -102,7 +102,7 @@ class AddressBook(UserDict):
 
 
     def show_book(self):
-        table = Table(title="The Diary of Tom Riddle(address book)",style="blue", show_lines=True)
+        table = Table(title="The Diary of Tom Riddle(address book)📜",style="blue", show_lines=True)
 
         table.add_column("Contact name", justify="center", style="green",min_width=20, no_wrap=True)
         table.add_column("Phones", style="yellow", justify="center", max_width=35, no_wrap=False)
@@ -212,7 +212,7 @@ class AddressBook(UserDict):
                 return "[i]At least two characters are required for search[/i]"
             filter_book = AddressBook()
             for _, record in self.data.items():
-                if re.findall(email, record.email.email, re.IGNORECASE):
+                if record.email and re.findall(email, record.email.email, re.IGNORECASE):
                     filter_book.add_record(record)
 
             return filter_book

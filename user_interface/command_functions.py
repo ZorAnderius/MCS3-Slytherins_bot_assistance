@@ -6,6 +6,7 @@ from pathlib import Path
 
 from address_book_classes.Record import Record
 from address_book_classes.AddressBook import AddressBook
+from notes_classes.NoteBook import NoteBook
 from notes_classes.Note import Note
 
 book_path = Path("address_book.json")
@@ -18,7 +19,7 @@ def add_contact(args, book):
             name = args[0]
             if name in book:
                 return Fore.YELLOW + "Contacts is already exist"
-            record = Record(name)
+            record = Record(name.lower())
             record.input_phones()
             record.input_email()
             record.input_birthday()
@@ -35,7 +36,7 @@ def add_phone(args, book):
     if len(args) == 1:
         name = args[0]
         try:
-            contact = book.find(name)
+            contact = book.find(name.lower())
             contact.input_phones()
         except ValueError as e:
             return Fore.RED + str(e)
@@ -51,7 +52,7 @@ def change_phone(args, book):
         old_phone = None
         new_phone = None
         try:
-            contact = book.find(name)
+            contact = book.find(name.lower())
             while True:
                 try:
                     if not old_phone:
@@ -89,7 +90,7 @@ def find_phone(args, book):
     if len(args) == 1:
         try:
             name = args[0]
-            return book.find(name)
+            return book.find(name.lower())
         except ValueError as e:
             return Fore.RED + str(e)
     else:
@@ -109,9 +110,9 @@ def delete_record(args, book):
     if len(args) == 1:
         name = args[0]
         try:
-            contact = book.find(name)
+            contact = book.find(name.lower())
             if contact:
-                book.delete(name)  
+                book.delete(name.lower())  
                 book.save_to_file(book_path)
                 return Fore.GREEN + 'Record deleted.'
             else:
@@ -128,7 +129,7 @@ def add_email(args, book):
     if len(args) == 1:
         name = args[0]
         try:
-            contact = book.find(name)
+            contact = book.find(name.lower())
             if contact and contact.email:
                 return Fore.YELLOW + "Email already exists. Please use change email."
             new_email = ""
@@ -158,7 +159,7 @@ def change_email(args,book):
     if len(args) == 1:
         name = args[0]
         try:
-            contact = book.find(name)
+            contact = book.find(name.lower())
             new_email = ""
             while True:
                 try:
@@ -186,7 +187,7 @@ def add_address(args, book):
     if len(args) == 1:
         name = args[0]
         try:
-            contact = book.find(name)
+            contact = book.find(name.lower())
             if contact and contact.address:
                 return Fore.YELLOW + "Address already exists. Please use change address spell."
             new_address = ""
@@ -216,7 +217,7 @@ def change_address(args, book):
     if len(args) == 1:
         name = args[0]
         try:
-            contact = book.find(name)
+            contact = book.find(name.lower())
             new_address = ""
             while True:
                 try:
@@ -244,7 +245,7 @@ def add_birthday(args, book):
     if len(args) == 1:
         name = args[0]
         try:
-            contact = book.find(name)
+            contact = book.find(name.lower())
             contact.input_birthday()
             if not contact.birthday:
                 return Fore.YELLOW + "Birthday didn't save. Dark Lord will be unhappy"
@@ -263,7 +264,7 @@ def show_birthday(args, book):
     if len(args) == 1:
         name = args[0]
         try:
-            contact = book.find(name)
+            contact = book.find(name.lower())
             if contact and not contact.birthday:
                 return f"{contact.name.value.capitalize()}'s birthday is not available."
             return f"{contact.name.value.capitalize()} birthday is on {contact.birthday}"
@@ -297,7 +298,7 @@ def find_notes(args, book):
     if len(args) == 1:
         try:
             name = args[0]
-            return book.find(name)
+            return book.find(name.lower())
         except ValueError as e:
             return Fore.RED + str(e)
     else:
@@ -308,7 +309,7 @@ def find_note(args, book):
     if len(args) == 2:
         try:
             name, title = args[0]
-            return book.find(name, title)
+            return book.find(name.lower(), title)
         except ValueError as e:
             return Fore.RED + str(e)
     else:
@@ -337,6 +338,8 @@ def search_by_title(args, book):
     if len(args) == 1:
         tag = args[0]
         filter_book = book.search_by_title(tag)
+        if type(filter_book) is str:
+            return filter_book
         return filter_book.show_book()
     else:
         return ("[i]Invalid format. Spell format - [search-title title][/i]")
@@ -348,7 +351,7 @@ def add_note(args, book):
     if len(args) == 1:
         try:
             author = args[0]
-            note = Note(author)
+            note = Note(author.lower())
             note.input_title()
             book.check_title(note)
             note.input_body()
@@ -368,7 +371,7 @@ def add_tag(args, book):
     if len(args) == 1:
         author = args[0]
         try:
-            note = book.find_all_notes(author)[0]
+            note = book.find_all_notes(author.lower())[0]
             note.input_tag()
         except ValueError as e:
             return Fore.RED + str(e)
@@ -381,7 +384,7 @@ def change_note_title(args, book):
     if len(args) == 1:
         author = args[0]
         try:
-            note = book.find_all_notes(author)[0]
+            note = book.find_all_notes(author.lower())[0]
             while True:
                 new_title = input(Fore.BLUE + "Say new title (n-close): ")
                 if new_title == "n":
@@ -421,7 +424,7 @@ def change_note_body(args, book):
                 if title == "n":
                     return Fore.YELLOW + "No changes saved."
                 if title:
-                    note = book.find_note(author,title)
+                    note = book.find_note(author.lower(),title)
                 if note is None:
                     raise ValueError(Fore.RED + "Invalid title")
                 body = input(Fore.BLUE + "Say note (n-close): ")
@@ -454,7 +457,7 @@ def change_note_tag(args, book):
                 if title == "n":
                         return Fore.YELLOW + "No changes saved."
                 if title:
-                    note = book.find_note(author,title)
+                    note = book.find_note(author.lower(),title)
                 if note is None:
                     raise ValueError(Fore.RED + "Invalid title")
                 if not old_tag:
@@ -492,9 +495,9 @@ def delete_notes(args, book):
     if len(args) == 1:
         author = args[0]
         try:
-            note = book.find_all_notes(author)
+            note = book.find_all_notes(author.lower())
             if note:
-                book.delete(author)  
+                book.delete(author.lower())  
                 book.save_to_file(notebook_path)
                 return Fore.GREEN + 'Notes deleted. Harry Potter is happy'
             else:
@@ -515,7 +518,7 @@ def remove_note(args, book):
                 if title == "n":
                         return Fore.YELLOW + "No changes saved."
                 if title:
-                    book.remove_note(author, title)
+                    book.remove_note(author.lower(), title)
                     break
             except ValueError as e:
                 print(Fore.RED + str(e))
@@ -534,7 +537,7 @@ def remove_note_body(args, book):
                 if title == "n":
                         return Fore.YELLOW + "No changes saved."
                 if title:
-                    note = book.find_note(author, title)
+                    note = book.find_note(author.lower(), title)
                     if note:
                         note.remove_body()
                         break
@@ -561,7 +564,7 @@ def remove_note_tag(args, book):
                 if title == "n":
                         return Fore.YELLOW + "No changes saved."
                 if title:
-                    note = book.find_note(author,title)
+                    note = book.find_note(author.lower(),title)
                 if not note:
                     raise ValueError("Wrong title")
                     
@@ -621,7 +624,7 @@ def remove_phone(args, book):
     if len(args) == 1:
         name = args[0]
         try:
-            contact = book.find(name)
+            contact = book.find(name.lower())
             if contact:
                 while True:
                     phone_to_remove = input("Say phone number (n-close): ")

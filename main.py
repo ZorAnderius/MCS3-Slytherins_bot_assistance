@@ -3,6 +3,7 @@ from pathlib import Path
 import os.path
 import sys
 from rich.console import Console
+from rich.emoji import Emoji
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
@@ -13,6 +14,7 @@ from user_interface.parse_input import parse_input
 
 book_path = Path("address_book.json")
 notebook_path = Path("note_book.json")
+
 
 
 def main():
@@ -29,7 +31,9 @@ def main():
         new_notebook = notebook.read_from_file(notebook_path )
         if new_notebook and type(new_notebook) is dict:
             notebook = notebook.add_book(new_notebook)
-
+            
+    print(Fore.BLUE + "Mischief managed!✨")
+    
     while True:
         user_input = prompt("Say the spell: ", completer=command_completer(),)
         if user_input:
@@ -83,8 +87,8 @@ def handle_command(command, args, book, notebook, console, book_path, notebook_p
         book.save_to_file(book_path)
         notebook.save_to_file(notebook_path)
         sys.exit(0)
-    elif command == "hello":
-        print(Fore.BLUE + "Hi! I am Voldebot! What kind of magic shall we do today?")
+    elif command == "hi":
+        print(Fore.BLUE + "Hi! I am Voldebot! What kind of magic shall we do today? 🪄")
     elif command == "add-contact":
         print(add_contact(args, book))
     elif command == "add-phone":
@@ -125,7 +129,7 @@ def handle_command(command, args, book, notebook, console, book_path, notebook_p
         print(add_tag(args, notebook))
     elif command == "change-title": 
         print(change_note_title(args, notebook))
-    elif command == "change-body": 
+    elif command == "change-body": #
         print(change_note_body(args, notebook))
     elif command == "change-tag": 
         print(change_note_tag(args, notebook))
@@ -141,7 +145,7 @@ def handle_command(command, args, book, notebook, console, book_path, notebook_p
         console.print(search_by_tag(args, notebook))
     elif command == "search-author":
         console.print(search_by_author(args, notebook))
-    elif command == "search-title": 
+    elif command == "search-title":
         console.print(search_by_title(args, notebook))
     elif command == "sort-notes":
         console.print(sort_notes(notebook))

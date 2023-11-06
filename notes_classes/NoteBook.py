@@ -2,6 +2,7 @@ from collections import UserDict
 from colorama import Fore
 import json
 from rich.table import Table
+from rich.emoji import Emoji
 import re
 
 from .Title import Title
@@ -78,7 +79,7 @@ class NoteBook(UserDict):
                 return res
             
     def show_book(self):
-        table = Table(title="The Diary of Tom Riddle",style="blue", show_lines=True)
+        table = Table(title="The Diary of Tom Riddle 📜",style="blue", show_lines=True)
 
         table.add_column("Author", justify="center", style="green",min_width=20, no_wrap=True)
         table.add_column("Title", style="yellow", justify="center", max_width=35, no_wrap=False)
@@ -121,7 +122,7 @@ class NoteBook(UserDict):
     
     def search_by_title(self, title):
         if title and type(title) is str:
-            if len(title) <= 2:
+            if len(title) < 2:
                 return "[i]At least two characters are required for search[/i]"
             filter_book = NoteBook()
             for _, notes in self.data.items():
